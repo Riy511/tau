@@ -5,10 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tau</title>
-  <meta name="description" content="Talk to Tau — Desi Haryanvi AI with Tau Ki Panchayat, Kand Detector, Roast Battle & more!" />
-  <meta property="og:title" content="Tau" />
-  <meta property="og:description" content="Ram Ram laadle! Try Tau Ki Panchayat, Kand Detector, Roast Battle & Haryanvi Translator." />
+  <title>Tau — Ultimate Haryanvi AI</title>
   <style>
     :root { --chat-font: 14.5px; }
     * { box-sizing: border-box; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
@@ -224,19 +221,24 @@
     .thug-drop .thug-glasses { animation: thugDropAnim 0.75s cubic-bezier(0.22, 1, 0.36, 1); }
     @keyframes thugDropAnim { 0% { transform: translateY(-52px); opacity: 0; } 60% { transform: translateY(3px); opacity: 1; } 100% { transform: translateY(0px); opacity: 1; } }
 
+    /* Dynamic Character Expression Classes */
     .mouth-laugh, .mouth-shock, .eyes-shock, .brows-angry { display: none; }
     .expr-laugh .mouth-normal { display: none; }
     .expr-laugh .mouth-laugh { display: block; }
     .expr-laugh .tau-head-group { animation: laughBounce 0.32s ease-in-out infinite; }
     @keyframes laughBounce { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-4px) rotate(-2deg); } }
+
     .expr-shock .mouth-normal { display: none; }
     .expr-shock .mouth-shock, .expr-shock .eyes-shock { display: block; }
     .expr-shock .thug-glasses { transform: translateY(9px) rotate(-4deg); transition: transform 0.25s; }
     .expr-shock.tau-avatar-wrap { border-color: #ef4444; box-shadow: 0 0 18px rgba(239, 68, 68, 0.45); }
+
     .expr-angry .brows-angry { display: block; }
     .expr-angry.tau-avatar-wrap { border-color: #f97316; box-shadow: 0 0 18px rgba(249, 115, 22, 0.45); }
+
     .expr-think .thug-glasses { transform: translateY(3px) rotate(3deg); transition: transform 0.25s; }
     .expr-flirt.tau-avatar-wrap { border-color: #ec4899; box-shadow: 0 0 18px rgba(236, 72, 153, 0.4); }
+
     .mouth-normal { transform-origin: 100px 131px; }
     .talking .mouth-normal { animation: talkMouth 0.22s ease-in-out infinite; }
     @keyframes talkMouth { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(2.2); } }
@@ -251,10 +253,6 @@
     .mood-pill {
       font-size: 0.65rem; padding: 2px 8px; border-radius: 999px;
       background: #181a22; color: #fef08a; border: 1px solid #eab30866; font-weight: 700; cursor: pointer;
-    }
-    .live-pill {
-      font-size: 0.64rem; padding: 2px 8px; border-radius: 999px;
-      background: #10b98122; color: #34d399; border: 1px solid #10b98166; font-weight: 800;
     }
     .tau-status { margin: 3px 0 0; font-size: 0.77rem; color: #fef08a; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -273,6 +271,21 @@
     .btn-sm.play { background: #facc15; color: #090a0d; border-color: #facc15; }
     .vol-slider { width: 52px; accent-color: #facc15; cursor: pointer; }
 
+    .config {
+      padding: 6px 14px; background: #14161d; border-bottom: 1px solid #eab30833;
+      display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    }
+    .config input {
+      flex: 1; min-width: 150px; padding: 5px 10px; border-radius: 8px;
+      border: 1px solid #eab30844; background: #0b0c10; color: #fefce8; font-size: 0.78rem;
+    }
+    .badge {
+      font-size: 0.68rem; padding: 3px 8px; border-radius: 999px;
+      background: #eab30822; color: #facc15; border: 1px solid #eab30866; font-weight: 700;
+    }
+    .badge.live { background: #facc15; color: #090a0d; border-color: #facc15; }
+
+    /* Daily Kand Banner */
     .daily-kand-bar {
       padding: 6px 14px; background: #1a170b; border-bottom: 1px solid #eab30833;
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -280,6 +293,7 @@
     }
     .daily-kand-bar strong { color: #facc15; }
 
+    /* Chat Window */
     .chat { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #111318; }
     .msg-wrap { display: flex; flex-direction: column; max-width: 85%; }
     .msg-wrap.user { align-self: flex-end; align-items: flex-end; }
@@ -300,12 +314,14 @@
     .act-btn:hover { background: #26220e; color: #facc15; border-color: #eab30888; }
     .act-btn.fav-on { background: #facc15; color: #090a0d; border-color: #facc15; font-weight: 800; }
 
+    /* Memory Approval Chip */
     .mem-prompt {
       margin-top: 5px; padding: 6px 10px; border-radius: 10px;
       background: #1a180b; border: 1px solid #eab30877;
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.75rem; color: #fef08a;
     }
 
+    /* Suggested Prompts */
     .starters-wrap { margin-top: 4px; padding: 12px; border-radius: 14px; background: #161820; border: 1px dashed #eab30855; }
     .starters-title { font-size: 0.76rem; color: #facc15; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
     .starters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 7px; }
@@ -316,6 +332,7 @@
     }
     .starter-card:hover { background: #26220e; border-color: #facc15; color: #facc15; transform: translateY(-1px); }
 
+    /* Input Area + Popovers */
     .input-area {
       position: relative; background: #0c0d11; border-top: 1px solid #eab30844;
       padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 6px;
@@ -336,6 +353,7 @@
     .emoji-item { background: none; border: none; font-size: 1.25rem; cursor: pointer; padding: 4px; border-radius: 6px; }
     .emoji-item:hover { background: #2a250e; }
 
+    /* Secret Slash Command Autocomplete */
     .cmd-popover {
       display: none; position: absolute; bottom: 60px; left: 12px; right: 12px; max-width: 420px; z-index: 55;
       background: #15171f; border: 1.5px solid #eab308; border-radius: 12px;
@@ -400,9 +418,11 @@
       border: 1px solid #eab30866; color: #fef08a; white-space: pre-wrap; line-height: 1.48;
     }
 
+    /* Kand Meter Bar */
     .kand-meter-bg { width: 100%; height: 14px; background: #090a0d; border-radius: 999px; border: 1px solid #eab30855; overflow: hidden; }
     .kand-meter-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #22c55e, #facc15, #ef4444); transition: width 0.5s ease; }
 
+    /* Roast Battle Scoreboard */
     .battle-board {
       display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px;
       padding: 10px; border-radius: 10px; background: #0c0d11; border: 1px solid #eab30855; text-align: center;
@@ -646,15 +666,20 @@
                 <ellipse cx="75" cy="116" rx="6.5" ry="3.8" fill="#e08e6d" opacity="0.45" /><ellipse cx="125" cy="116" rx="6.5" ry="3.8" fill="#e08e6d" opacity="0.45" />
                 <path d="M 97 110 Q 100 114 103 110" fill="none" stroke="#c89260" stroke-width="2.4" stroke-linecap="round" />
 
+                <!-- Shocked Eyes (revealed when glasses drop) -->
                 <g class="eyes-shock">
-                  <circle cx="83" cy="96" r="6" fill="#ffffff" stroke="#1f1610" stroke-width="1.5" /><circle cx="83" cy="96" r="2.5" fill="#1f1610" />
-                  <circle cx="117" cy="96" r="6" fill="#ffffff" stroke="#1f1610" stroke-width="1.5" /><circle cx="117" cy="96" r="2.5" fill="#1f1610" />
+                  <circle cx="83" cy="96" r="6" fill="#ffffff" stroke="#1f1610" stroke-width="1.5" />
+                  <circle cx="83" cy="96" r="2.5" fill="#1f1610" />
+                  <circle cx="117" cy="96" r="6" fill="#ffffff" stroke="#1f1610" stroke-width="1.5" />
+                  <circle cx="117" cy="96" r="2.5" fill="#1f1610" />
                 </g>
 
+                <!-- Mouth Reactions -->
                 <path class="mouth-normal" d="M 91 129 Q 100 135 109 129" fill="none" stroke="#6e4425" stroke-width="2.6" stroke-linecap="round" />
                 <path class="mouth-laugh" d="M 88 126 Q 100 142 112 126 Z" fill="#7f1d1d" stroke="#450a0a" stroke-width="2" />
                 <ellipse class="mouth-shock" cx="100" cy="131" rx="6" ry="7.5" fill="#450a0a" stroke="#6e4425" stroke-width="2" />
 
+                <!-- ONLY TWO-PART Moustache -->
                 <g fill="#1f1610">
                   <path class="head-stache-left" d="M 98 119 C 91 115, 76 116, 67 123 C 63 126, 66 130, 72 128 C 81 125, 91 124, 98 123 Z" />
                   <path class="head-stache-right" d="M 102 119 C 109 115, 124 116, 133 123 C 137 126, 134 130, 128 128 C 119 125, 109 124, 102 123 Z" />
@@ -670,8 +695,10 @@
                   <rect x="108" y="96" width="3" height="3" fill="#ffffff" /><rect x="111" y="99" width="3" height="3" fill="#ffffff" />
                 </g>
 
+                <!-- Angry Brows -->
                 <g class="brows-angry" stroke="#1f1610" stroke-width="3.6" stroke-linecap="round">
-                  <line x1="72" y1="88" x2="93" y2="94" /><line x1="128" y1="88" x2="107" y2="94" />
+                  <line x1="72" y1="88" x2="93" y2="94" />
+                  <line x1="128" y1="88" x2="107" y2="94" />
                 </g>
 
                 <g>
@@ -695,7 +722,6 @@
             <h1>Tau</h1>
             <span class="swag-pill" id="activeModePill">😎 Attitude</span>
             <span class="mood-pill" id="moodPill" title="Click to cycle mood">Mood: 😊 Chill</span>
-            <span class="live-pill">● Live AI</span>
           </div>
           <p class="tau-status" id="tauStatus">😎 Full swag mein baitha se Tau — puchh ke puchhna!</p>
         </div>
@@ -722,6 +748,12 @@
         <audio id="chatMusic" src="2_khatole.mp3" loop preload="auto"></audio>
       </div>
 
+      <div class="config">
+        <input id="apiKey" type="password" placeholder="Optional: Paste NEW OpenAI API key for Live Mode (supports images & all modules)" />
+        <span id="modeBadge" class="badge">Demo Mode</span>
+      </div>
+
+      <!-- Daily Kand Bar -->
       <div class="daily-kand-bar">
         <span id="dailyKandText">📰 <strong>Daily Kand:</strong> Loading...</span>
         <button type="button" id="nextDailyKandBtn" class="btn-sm" title="Next Kand">🎲 Next</button>
@@ -729,6 +761,7 @@
 
       <div id="chat" class="chat"></div>
 
+      <!-- Input Area -->
       <div class="input-area">
         <div id="attachPreview" class="attach-preview">
           <img id="attachImg" src="" alt="Preview" />
@@ -749,10 +782,14 @@
       </div>
     </div>
 
-    <!-- ================= MODALS ================= -->
+    <!-- ================= MODULE MODALS ================= -->
+    <!-- 1. Tau Ki Panchayat Modal -->
     <div id="panchayatModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>⚖️ Tau Ki Panchayat</h2><button class="modal-close" data-close="panchayatModal">✕</button></div>
+        <div class="modal-head">
+          <h2>⚖️ Tau Ki Panchayat</h2>
+          <button class="modal-close" data-close="panchayatModal">✕</button>
+        </div>
         <div class="modal-body">
           <p style="margin:0;color:#fef08a;">Apni dosti, pyaar, office ya ghar ka koi bhi jhagda / situation batao—Sarpanch Tau abhi faisla sunayega!</p>
           <textarea id="panchayatInput" class="mod-textarea" placeholder="e.g., Mere dost ne mera bike udhaar le jaake petrol khatam kar diya aur ab phone nahi utha raha..."></textarea>
@@ -762,16 +799,21 @@
       </div>
     </div>
 
+    <!-- 2. Kand Detector Modal -->
     <div id="kandModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>🚨 Kand Detector (1–10)</h2><button class="modal-close" data-close="kandModal">✕</button></div>
+        <div class="modal-head">
+          <h2>🚨 Kand Detector (1–10)</h2>
+          <button class="modal-close" data-close="kandModal">✕</button>
+        </div>
         <div class="modal-body">
           <p style="margin:0;color:#fef08a;">Jo bhi kand kiya hai sach-sach likh de—Tau meter lagake batayega kitna bada kand hai!</p>
           <textarea id="kandInput" class="mod-textarea" placeholder="e.g., Maine galti se boss wale WhatsApp group mein unhi ka meme bhej diya..."></textarea>
           <button type="button" id="runKandBtn" class="send-btn">🚨 Scan Kand Level</button>
           <div id="kandResultWrap" style="display:none; flex-direction:column; gap:8px;">
             <div style="display:flex;justify-content:space-between;font-weight:800;color:#facc15;">
-              <span id="kandScoreText">Kand Score: 0/10</span><span id="kandTierText">Level</span>
+              <span id="kandScoreText">Kand Score: 0/10</span>
+              <span id="kandTierText">Level</span>
             </div>
             <div class="kand-meter-bg"><div id="kandMeterFill" class="kand-meter-fill"></div></div>
             <div id="kandOut" class="mod-out"></div>
@@ -780,11 +822,15 @@
       </div>
     </div>
 
+    <!-- 3. Savage Reply Generator Modal -->
     <div id="savageModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>💬 Savage Reply Generator</h2><button class="modal-close" data-close="savageModal">✕</button></div>
+        <div class="modal-head">
+          <h2>💬 Savage Reply Generator</h2>
+          <button class="modal-close" data-close="savageModal">✕</button>
+        </div>
         <div class="modal-body">
-          <textarea id="savageInput" class="mod-textarea" placeholder="Wo message paste kar jispe reply dena hai..."></textarea>
+          <textarea id="savageInput" class="mod-textarea" placeholder="Wo message paste kar jispe reply dena hai (e.g., 'Bhai 500 udhaar de de next week pakka wapas kar dunga')"></textarea>
           <div class="setting-row">
             <span>🎯 Reply Tone</span>
             <select id="savageTone">
@@ -800,9 +846,13 @@
       </div>
     </div>
 
+    <!-- 4. Roast Battle Arena Modal -->
     <div id="battleModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>🥊 Roast Battle: You vs Tau</h2><button class="modal-close" data-close="battleModal">✕</button></div>
+        <div class="modal-head">
+          <h2>🥊 Roast Battle: You vs Tau</h2>
+          <button class="modal-close" data-close="battleModal">✕</button>
+        </div>
         <div class="modal-body">
           <div class="battle-board">
             <div><div style="font-size:0.75rem;color:#9ca3af;">YOU</div><div id="userBattleScore" class="battle-score">0</div></div>
@@ -821,11 +871,15 @@
       </div>
     </div>
 
+    <!-- 6. Haryanvi Translator Modal (with Slang Intensity) -->
     <div id="transModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>🌐 Haryanvi Translator</h2><button class="modal-close" data-close="transModal">✕</button></div>
+        <div class="modal-head">
+          <h2>🌐 Haryanvi Translator</h2>
+          <button class="modal-close" data-close="transModal">✕</button>
+        </div>
         <div class="modal-body">
-          <textarea id="transInput" class="mod-textarea" placeholder="Enter English or Hindi sentence..."></textarea>
+          <textarea id="transInput" class="mod-textarea" placeholder="Enter English or Hindi sentence (e.g., How are you brother? I am very tired today.)"></textarea>
           <div class="setting-row">
             <span>🌶️ Slang Intensity</span>
             <select id="transIntensity">
@@ -844,9 +898,13 @@
       </div>
     </div>
 
+    <!-- 7. Daily Kand Modal -->
     <div id="dailyKandModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>📰 Daily Kand</h2><button class="modal-close" data-close="dailyKandModal">✕</button></div>
+        <div class="modal-head">
+          <h2>📰 Daily Kand</h2>
+          <button class="modal-close" data-close="dailyKandModal">✕</button>
+        </div>
         <div class="modal-body">
           <div id="dailyKandCard" class="mod-out"></div>
           <div style="display:flex;gap:8px;">
@@ -857,13 +915,20 @@
       </div>
     </div>
 
+    <!-- 9. Memory Mode Manager Modal -->
     <div id="memoryModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>🧠 Tau Memory Mode</h2><button class="modal-close" data-close="memoryModal">✕</button></div>
+        <div class="modal-head">
+          <h2>🧠 Tau Memory Mode</h2>
+          <button class="modal-close" data-close="memoryModal">✕</button>
+        </div>
         <div class="modal-body">
-          <div class="setting-row"><span>🧠 Enable Memory Mode</span><input type="checkbox" id="memEnabledToggle" checked /></div>
+          <div class="setting-row">
+            <span>🧠 Enable Memory Mode</span>
+            <input type="checkbox" id="memEnabledToggle" checked />
+          </div>
           <div style="display:flex;gap:6px;">
-            <input id="memAddInput" class="mod-input" type="text" placeholder="Add fact (e.g., Mera naam Aman hai)" />
+            <input id="memAddInput" class="mod-input" type="text" placeholder="Add fact (e.g., Mera naam Aman hai, main Rohtak se hu)" />
             <button type="button" id="memAddBtn" class="send-btn">Save</button>
           </div>
           <div id="memoryList" style="display:flex;flex-direction:column;gap:6px;"></div>
@@ -871,32 +936,57 @@
       </div>
     </div>
 
+    <!-- Saved Replies Modal -->
     <div id="favsModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>⭐ Saved Replies / Favourites</h2><button class="modal-close" data-close="favsModal">✕</button></div>
+        <div class="modal-head">
+          <h2>⭐ Saved Replies / Favourites</h2>
+          <button class="modal-close" data-close="favsModal">✕</button>
+        </div>
         <div id="favsBody" class="modal-body"></div>
       </div>
     </div>
 
+    <!-- Settings Modal -->
     <div id="settingsModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>⚙️ Settings</h2><button class="modal-close" data-close="settingsModal">✕</button></div>
+        <div class="modal-head">
+          <h2>⚙️ Settings</h2>
+          <button class="modal-close" data-close="settingsModal">✕</button>
+        </div>
         <div class="modal-body">
           <div class="setting-row">
             <span>🗣️ Language Selection</span>
-            <select id="setLang"><option value="Haryanvi">Haryanvi (Desi)</option><option value="Hindi">Hindi</option><option value="English">English</option></select>
+            <select id="setLang">
+              <option value="Haryanvi">Haryanvi (Desi)</option>
+              <option value="Hindi">Hindi</option>
+              <option value="English">English</option>
+            </select>
           </div>
-          <div class="setting-row"><span>🔊 Voice Replies (Read Aloud)</span><input type="checkbox" id="setVoiceReply" /></div>
-          <div class="setting-row"><span>🔔 Sound Effects (SFX)</span><input type="checkbox" id="setSfx" checked /></div>
-          <div class="setting-row"><span>🔠 Font Size (<span id="fontSizeVal">14.5px</span>)</span><input type="range" id="setFontSize" min="12" max="20" step="0.5" value="14.5" /></div>
+          <div class="setting-row">
+            <span>🔊 Voice Replies (Read Aloud)</span>
+            <input type="checkbox" id="setVoiceReply" />
+          </div>
+          <div class="setting-row">
+            <span>🔔 Sound Effects (SFX)</span>
+            <input type="checkbox" id="setSfx" checked />
+          </div>
+          <div class="setting-row">
+            <span>🔠 Font Size (<span id="fontSizeVal">14.5px</span>)</span>
+            <input type="range" id="setFontSize" min="12" max="20" step="0.5" value="14.5" />
+          </div>
           <button type="button" id="clearAllHistBtn" class="danger-btn">🗑️ Clear All Chat History</button>
         </div>
       </div>
     </div>
 
+    <!-- Help & Secret Commands Modal -->
     <div id="helpModal" class="modal-backdrop">
       <div class="modal">
-        <div class="modal-head"><h2>❓ Help & Secret Commands</h2><button class="modal-close" data-close="helpModal">✕</button></div>
+        <div class="modal-head">
+          <h2>❓ Help & Secret Commands</h2>
+          <button class="modal-close" data-close="helpModal">✕</button>
+        </div>
         <div class="modal-body" style="line-height:1.55;">
           <p><strong>Secret Slash Commands (Type in chat):</strong><br>
           • <code>/panchayat [story]</code> — Tau Ki Panchayat verdict<br>
@@ -907,6 +997,7 @@
           • <code>/gyaan [topic]</code> — Desi educational gyaan<br>
           • <code>/translate [text]</code> — Haryanvi translation<br>
           • <code>/memory</code> — View Tau's saved memories</p>
+          <p style="color:#facc15;"><strong>Note:</strong> Offline Demo Mode works completely without an API key. Paste your OpenAI API key for full Live AI responses across every module & image upload!</p>
         </div>
       </div>
     </div>
@@ -918,7 +1009,10 @@
     // ================= TOAST & MODALS =================
     const toastEl = document.getElementById("toast");
     let toastTimer = null;
-    function showToast(msg) { toastEl.textContent = msg; toastEl.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2000); }
+    function showToast(msg) {
+      toastEl.textContent = msg; toastEl.classList.add("show");
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2000);
+    }
     function openModal(id) { document.getElementById(id).classList.add("open"); }
     function closeModal(id) { document.getElementById(id).classList.remove("open"); }
     document.querySelectorAll(".modal-close").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
@@ -941,9 +1035,12 @@
     setFontSizeEl.addEventListener("input", () => { settings.fontSize = parseFloat(setFontSizeEl.value); applySettings(); });
     applySettings();
 
-    // ================= CHARACTER REACTIONS =================
-    const tauAvatar = document.getElementById("tauAvatar"), rxnBadge = document.getElementById("rxnBadge"), tauStatus = document.getElementById("tauStatus");
+    // ================= CHARACTER REACTIONS & AVATAR =================
+    const tauAvatar = document.getElementById("tauAvatar");
+    const rxnBadge = document.getElementById("rxnBadge");
+    const tauStatus = document.getElementById("tauStatus");
     const EXPR_CLASSES = ["expr-laugh", "expr-shock", "expr-angry", "expr-think", "expr-flirt"];
+
     function setTauExpression(expr, emoji, statusLine = null, duration = 4500) {
       tauAvatar.classList.remove(...EXPR_CLASSES);
       if (expr && expr !== "swag") tauAvatar.classList.add("expr-" + expr);
@@ -951,18 +1048,25 @@
       if (statusLine) tauStatus.textContent = statusLine;
       if (duration > 0) {
         setTimeout(() => {
-          tauAvatar.classList.remove(...EXPR_CLASSES); rxnBadge.textContent = "😎";
+          tauAvatar.classList.remove(...EXPR_CLASSES);
+          rxnBadge.textContent = "😎";
           tauStatus.textContent = chatPlaying ? "🕺 Tau inside song pe full vibe kar raha se!" : "😎 Full swag mein baitha se Tau — puchh ke puchhna!";
         }, duration);
       }
     }
-    function triggerThugDrop() { tauAvatar.classList.remove("thug-drop"); void tauAvatar.offsetWidth; tauAvatar.classList.add("thug-drop"); }
-    function triggerTalking(ms = 1800) { tauAvatar.classList.add("talking"); setTimeout(() => tauAvatar.classList.remove("talking"), ms); }
+    function triggerThugDrop() {
+      tauAvatar.classList.remove("thug-drop"); void tauAvatar.offsetWidth; tauAvatar.classList.add("thug-drop");
+    }
+    function triggerTalking(ms = 1800) {
+      tauAvatar.classList.add("talking");
+      setTimeout(() => tauAvatar.classList.remove("talking"), ms);
+    }
     tauAvatar.addEventListener("click", () => { triggerThugDrop(); setTauExpression("laugh", "😂", "😂 Tau full moj mein se!", 2000); triggerTalking(900); });
 
     // ================= INTRO + DUAL SONG ENGINE =================
     const introOverlay = document.getElementById("introOverlay"), introSoundBtn = document.getElementById("introSoundBtn"), introInsertLabel = document.getElementById("introInsertLabel"), introSongLabelText = document.getElementById("introSongLabelText"), introSongPicker = document.getElementById("introSongPicker"), enterBtn = document.getElementById("enterBtn"), replayIntroBtn = document.getElementById("replayIntroBtn");
     const introMusic = document.getElementById("introMusic"), chatMusic = document.getElementById("chatMusic"), playBtn = document.getElementById("playBtn"), volSlider = document.getElementById("volSlider"), chatSongPicker = document.getElementById("chatSongPicker"), trackName = document.getElementById("trackName"), eqIcon = document.getElementById("eqIcon");
+
     let volume = 0.35; introMusic.volume = volume; chatMusic.volume = volume;
     let currentScreen = "intro", introMp3Available = false, chatMp3Available = false, introPlaying = false, chatPlaying = false;
 
@@ -1044,7 +1148,7 @@
     playBtn.addEventListener("click", () => chatPlaying ? pauseChatSong() : startChatSong().catch(() => {}));
     volSlider.addEventListener("input", () => { volume = parseFloat(volSlider.value); introMusic.volume = volume; chatMusic.volume = volume; if (masterGain) masterGain.gain.value = volume; });
 
-    // ================= VOICE REPLIES =================
+    // ================= VOICE REPLIES (TTS) =================
     function speakText(text, force = false) {
       if (!window.speechSynthesis || (!force && !settings.voiceReply)) return;
       speechSynthesis.cancel();
@@ -1058,74 +1162,72 @@
       speechSynthesis.speak(u);
     }
 
-    // ================= VERCEL BACKEND CALLER + FALLBACK =================
-    async function callBackendAI(messages) {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages })
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        const err = new Error(data.error || `HTTP ${res.status}`);
-        err.status = res.status;
-        throw err;
-      }
-      return data.reply;
-    }
-
-    async function askTauAI(messages, fallbackFn) {
-      if (!location.protocol.startsWith("http")) {
-        return fallbackFn();
-      }
-      try {
-        return await callBackendAI(messages);
-      } catch (err) {
-        // If /api/chat doesn't exist locally or on static host, fall back gracefully
-        if (err.status === 404 || err.message.includes("Failed to fetch")) {
-          return fallbackFn();
-        }
-        throw err;
-      }
-    }
-
     // ================= MEMORY MODE =================
     let memEnabled = JSON.parse(localStorage.getItem("taugpt_mem_enabled") ?? "true");
     let memories = JSON.parse(localStorage.getItem("taugpt_memory_v1") || "[]");
-    const memCountEl = document.getElementById("memCount"), memEnabledToggle = document.getElementById("memEnabledToggle"), memoryListEl = document.getElementById("memoryList");
-    function saveMemories() { localStorage.setItem("taugpt_memory_v1", JSON.stringify(memories)); localStorage.setItem("taugpt_mem_enabled", JSON.stringify(memEnabled)); memCountEl.textContent = memories.length; }
+    const memCountEl = document.getElementById("memCount");
+    const memEnabledToggle = document.getElementById("memEnabledToggle");
+    const memoryListEl = document.getElementById("memoryList");
+
+    function saveMemories() {
+      localStorage.setItem("taugpt_memory_v1", JSON.stringify(memories));
+      localStorage.setItem("taugpt_mem_enabled", JSON.stringify(memEnabled));
+      memCountEl.textContent = memories.length;
+    }
     function renderMemoryModal() {
-      memEnabledToggle.checked = memEnabled; memoryListEl.innerHTML = "";
-      if (memories.length === 0) { memoryListEl.innerHTML = `<div style="color:#9ca3af;">Abhi kuch yaad nahi rakha hai. Chat mein apna naam ya pasand batao!</div>`; return; }
+      memEnabledToggle.checked = memEnabled;
+      memoryListEl.innerHTML = "";
+      if (memories.length === 0) {
+        memoryListEl.innerHTML = `<div style="color:#9ca3af;">Abhi kuch yaad nahi rakha hai. Chat mein apna naam ya pasand batao, ya upar add karo!</div>`;
+        return;
+      }
       memories.forEach((m, idx) => {
-        const div = document.createElement("div"); div.className = "card-item"; div.style.cssText = "flex-direction:row;align-items:center;justify-content:space-between;";
+        const div = document.createElement("div");
+        div.className = "card-item";
+        div.style.cssText = "flex-direction:row;align-items:center;justify-content:space-between;";
         div.innerHTML = `<span>🧠 ${m.replace(/</g, "&lt;")}</span>`;
-        const del = document.createElement("button"); del.className = "del-btn"; del.textContent = "🗑️";
+        const del = document.createElement("button");
+        del.className = "del-btn"; del.textContent = "🗑️";
         del.onclick = () => { memories.splice(idx, 1); saveMemories(); renderMemoryModal(); };
-        div.appendChild(del); memoryListEl.appendChild(div);
+        div.appendChild(del);
+        memoryListEl.appendChild(div);
       });
     }
     saveMemories();
     memEnabledToggle.addEventListener("change", () => { memEnabled = memEnabledToggle.checked; saveMemories(); showToast(memEnabled ? "Memory Mode ON" : "Memory Mode OFF"); });
-    document.getElementById("memAddBtn").addEventListener("click", () => { const v = document.getElementById("memAddInput").value.trim(); if (!v) return; memories.unshift(v); document.getElementById("memAddInput").value = ""; saveMemories(); renderMemoryModal(); showToast("Memory Saved! 🧠"); });
+    document.getElementById("memAddBtn").addEventListener("click", () => {
+      const val = document.getElementById("memAddInput").value.trim();
+      if (!val) return;
+      memories.unshift(val);
+      document.getElementById("memAddInput").value = "";
+      saveMemories(); renderMemoryModal(); showToast("Memory Saved! 🧠");
+    });
     document.getElementById("btnMemory").addEventListener("click", () => { renderMemoryModal(); openModal("memoryModal"); toggleDrawer(false); });
 
     function detectMemoryCandidate(text) {
       if (!memEnabled) return null;
       const mName = text.match(/(?:my name is|mera naam|i am|main hu)\s+([A-Za-z]{2,20})/i);
       if (mName && !["fine", "good", "happy", "sad", "tired", "here", "back", "bored"].includes(mName[1].toLowerCase())) {
-        const f = `User's name is ${mName[1]}`; if (!memories.includes(f)) return f;
+        const fact = `User's name is ${mName[1]}`;
+        if (!memories.includes(fact)) return fact;
       }
       const mCity = text.match(/(?:i live in|i am from|rehta hu|rehti hu|se hu)\s+([A-Za-z\s]{2,22})/i);
-      if (mCity) { const f = `User is from ${mCity[1].trim()}`; if (!memories.includes(f)) return f; }
+      if (mCity) {
+        const fact = `User is from ${mCity[1].trim()}`;
+        if (!memories.includes(fact)) return fact;
+      }
       const mFav = text.match(/(?:i love|i like|my fav(?:orite|ourite)? is|pasand hai)\s+([A-Za-z0-9\s]{2,26})/i);
-      if (mFav) { const f = `User likes ${mFav[1].trim()}`; if (!memories.includes(f)) return f; }
+      if (mFav) {
+        const fact = `User likes ${mFav[1].trim()}`;
+        if (!memories.includes(fact)) return fact;
+      }
       return null;
     }
+
     function getUserNameFromMemory() {
       if (!memEnabled) return null;
-      const h = memories.find(m => m.startsWith("User's name is "));
-      return h ? h.replace("User's name is ", "") : null;
+      const hit = memories.find(m => m.startsWith("User's name is "));
+      return hit ? hit.replace("User's name is ", "") : null;
     }
 
     // ================= PERSONALITY MODES & MOOD DETECTION =================
@@ -1143,7 +1245,8 @@
     function renderModes() {
       modeGridEl.innerHTML = "";
       PERSONALITY_MODES.forEach(m => {
-        const b = document.createElement("button"); b.type = "button"; b.className = "mode-pill" + (activeMode === m.id ? " active" : "");
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "mode-pill" + (activeMode === m.id ? " active" : "");
         b.textContent = m.label;
         b.onclick = () => {
           activeMode = m.id; localStorage.setItem("taugpt_mode_v1", activeMode);
@@ -1158,9 +1261,12 @@
     renderModes();
 
     const MOODS = [
-      { key: "chill", tag: "😊 Chill" }, { key: "happy", tag: "🥳 Khush" },
-      { key: "sad", tag: "😔 Udaas" }, { key: "stressed", tag: "😤 Tensed" },
-      { key: "romantic", tag: "😍 Romantic" }, { key: "curious", tag: "🧐 Curious" },
+      { key: "chill", tag: "😊 Chill" },
+      { key: "happy", tag: "🥳 Khush" },
+      { key: "sad", tag: "😔 Udaas" },
+      { key: "stressed", tag: "😤 Tensed" },
+      { key: "romantic", tag: "😍 Romantic" },
+      { key: "curious", tag: "🧐 Curious" },
       { key: "kand", tag: "😈 Mischievous" }
     ];
     let currentMood = MOODS[0];
@@ -1176,10 +1282,12 @@
     }
     moodPill.addEventListener("click", () => {
       const next = (MOODS.findIndex(m => m.key === currentMood.key) + 1) % MOODS.length;
-      currentMood = MOODS[next]; moodPill.textContent = "Mood: " + currentMood.tag; showToast("Mood set: " + currentMood.tag);
+      currentMood = MOODS[next];
+      moodPill.textContent = "Mood: " + currentMood.tag;
+      showToast("Mood set: " + currentMood.tag);
     });
 
-    // ================= DAILY KAND =================
+    // ================= 7. DAILY KAND =================
     const DAILY_KANDS = [
       { title: "Doodh Ubalna Bhool Gya!", score: "8/10 🚨", text: "Subah mummy ne bola 'Beta doodh dekhna', bhai ne 2 min Instagram khola... aur pateela coal factory ban gya! Poora ghar dhuan-dhuan!" },
       { title: "Wrong Group Screenshot!", score: "9/10 💀", text: "Dost ki burai wala screenshot galti se usi dost ke saath wale family group mein chala gya—ab ladka Himalay jaane ki ticket dekh raha se!" },
@@ -1187,8 +1295,11 @@
       { title: "Online Class Mic ON!", score: "7/10 🎙️", text: "Class mein mic mute samajh ke mummy ko bola 'Mummy aalu ke paranthe aur makhan le aao', sir ne bola 'Beta mere liye bhi ek bhej do!'" },
       { title: "Crush Ko 'Bhai' Bol Diya!", score: "10/10 🔥", text: "Nervousness mein crush ko 'Thank you bhai' bol aaya—ib dost roz chhed ke jeena haram kar rahe hain!" }
     ];
-    let dailyKandIdx = (new Date().getDate() + new Date().getMonth() * 31) % DAILY_KANDS.length;
+    // Pick today's kand based on date
+    const todaySeed = new Date().getDate() + new Date().getMonth() * 31;
+    let dailyKandIdx = todaySeed % DAILY_KANDS.length;
     const dailyKandText = document.getElementById("dailyKandText"), dailyKandCard = document.getElementById("dailyKandCard");
+
     function renderDailyKand() {
       const k = DAILY_KANDS[dailyKandIdx];
       dailyKandText.innerHTML = `📰 <strong>Daily Kand (${k.score}):</strong> ${k.title} — ${k.text.slice(0, 72)}...`;
@@ -1198,9 +1309,13 @@
     document.getElementById("nextDailyKandBtn").addEventListener("click", () => { dailyKandIdx = (dailyKandIdx + 1) % DAILY_KANDS.length; renderDailyKand(); });
     document.getElementById("modalNextKandBtn").addEventListener("click", () => { dailyKandIdx = (dailyKandIdx + 1) % DAILY_KANDS.length; renderDailyKand(); });
     document.getElementById("btnDailyKand").addEventListener("click", () => { renderDailyKand(); openModal("dailyKandModal"); toggleDrawer(false); });
-    document.getElementById("sendDailyKandChatBtn").addEventListener("click", () => { const k = DAILY_KANDS[dailyKandIdx]; closeModal("dailyKandModal"); sendUserMessage(`Aaj ke Daily Kand pe comment kar Tau: "${k.title} - ${k.text}"`); });
+    document.getElementById("sendDailyKandChatBtn").addEventListener("click", () => {
+      const k = DAILY_KANDS[dailyKandIdx];
+      closeModal("dailyKandModal");
+      sendUserMessage(`Aaj ke Daily Kand pe comment kar Tau: "${k.title} - ${k.text}"`);
+    });
 
-    // ================= JOKES, ROASTS & MODULES =================
+    // ================= JOKES & ROASTS =================
     const JOKES_BANK = [
       "Ek Haryanvi ne Google te puchha: 'Mhara gaon kit se?' Google bolya: 'Bhai seedha chala ja, jitt doodh-dahi ki nadi behve aur hukka bajta dikhe, samajh le aa gya!' 😂",
       "Teacher: 'Beta tension ki spelling bata.' Haryanvi chhora: 'Madam, tension haryanvi ke syllabus mein koni—hum toh bas doodh pi ke so jaate hain!' 🥛😂",
@@ -1214,40 +1329,63 @@
       "Bhai tu itna confused rehta se ki Google Maps bhi tujhe dekh ke bol de—'Apna rasta khud dekh le!' 🧭😂"
     ];
 
+    // ================= 1. TAU KI PANCHAYAT =================
     function evaluatePanchayatOffline(story) {
       const s = story.toLowerCase();
       let verdict = "Dono pakshon ko 2-2 cup adrak wali chai aur 1 plate samose khilaye jaayein, aur maamla wahin khatam kiya jaave!";
       let advice = "Jhagda lamba kheenchne te dosti/rishte kharab hove hain. Seedha baat karke clear kar le laadle!";
-      if (/money|paise|udhaar|loan|rupee/.test(s)) { verdict = "Udhaar lene wale ka phone tab tak zabt kar liya jaave jab tak wo GPay pe 'Paid' ka screenshot na bheje!"; advice = "Dosti mein paise hamesha clear timeline ke saath do."; }
-      else if (/love|crush|gf|bf|pyaar|breakup/.test(s)) { verdict = "Dil tootne wale ko turant 1 glass thandi lassi pilayi jaave aur 3 din sad songs sunna ban kiya jaave!"; advice = "Jo kadar na kare uske pichhe bhaagna band kar—apne career pe dhyan de sher!"; }
-      else if (/boss|office|job|work|kaam|manager/.test(s)) { verdict = "Panchayat hukum deti se ki Friday shaam 5 baje ke baad laptop band karke sidha chai ki tapri pe jaaya jaave!"; advice = "Kaam mehnat se karo par healthy boundaries bhi rakho."; }
-      return `🏛️ TAU KI PANCHAYAT\n\n📜 Case: "${story}"\n\n⚖️ Panchayat Ka Faisla:\n${verdict}\n\n💡 Asli Salah:\n${advice}`;
+      if (/money|paise|udhaar|loan|rupee/.test(s)) {
+        verdict = "Udhaar lene wale ka phone tab tak zabt kar liya jaave jab tak wo GPay pe 'Paid' ka screenshot na bheje!";
+        advice = "Dosti mein paise hamesha likh ke ya clear timeline ke saath do, aur maangne mein sharmao mat.";
+      } else if (/love|crush|gf|bf|pyaar|breakup/.test(s)) {
+        verdict = "Dil tootne wale ko turant 1 glass thandi lassi pilayi jaave aur 3 din sad songs sunna ban kiya jaave!";
+        advice = "Jo kadar na kare uske pichhe bhaagna band kar—apne career aur self-respect pe dhyan de sher!";
+      } else if (/boss|office|job|work|kaam|manager/.test(s)) {
+        verdict = "Panchayat hukum deti se ki Friday shaam 5 baje ke baad laptop band karke sidha khet ya chai ki tapri pe jaaya jaave!";
+        advice = "Kaam mehnat se karo par boundaries bhi rakho—health aur peace sabte upar se.";
+      } else if (/exam|study|college|padhai|fail/.test(s)) {
+        verdict = "Reel aur gaming pe 7 din ka curfew lagaya jaave, aur har 1 ghante padhai pe 1 laddoo inaam diya jaave!";
+        advice = "Chhote daily targets banao—ek saath syllabus dekh ke darne ki jagah roz 2 topic pakke karo.";
+      }
+      return `🏛️ TAU KI PANCHAYAT\n\n📜 Case: "${story}"\n\n👳 Sarpanch Observation:\nArre bhai, yo toh kati gambhir par mazedaar maamla le aaya tu chopal pe!\n\n⚖️ Panchayat Ka Faisla (Verdict):\n${verdict}\n\n💡 Asli Salah:\n${advice}`;
     }
 
     document.getElementById("btnPanchayat").addEventListener("click", () => { openModal("panchayatModal"); toggleDrawer(false); });
     document.getElementById("runPanchayatBtn").addEventListener("click", async () => {
-      const inp = document.getElementById("panchayatInput").value.trim(), out = document.getElementById("panchayatOut");
+      const inp = document.getElementById("panchayatInput").value.trim();
+      const out = document.getElementById("panchayatOut");
       if (!inp) { showToast("Pehle apna case likh bhai!"); return; }
-      out.style.display = "block"; out.textContent = "Panchayat baith rahi se... hukka lagane do...";
-      try {
-        out.textContent = await askTauAI(
-          [{ role: "system", content: "Act as Sarpanch of 'Tau Ki Panchayat' in Haryana. Reply in funny Hinglish Haryanvi with 3 sections: 1) Sarpanch Observation, 2) Funny Panchayat Verdict, 3) Sensible Practical Advice." }, { role: "user", content: inp }],
-          () => evaluatePanchayatOffline(inp)
-        );
+      out.style.display = "block";
+      const key = document.getElementById("apiKey").value.trim();
+      if (!key) {
+        out.textContent = evaluatePanchayatOffline(inp);
         setTauExpression("think", "⚖️", "⚖️ Sarpanch Tau ne faisla suna diya!", 3500);
-      } catch (e) { out.textContent = "⚠️ " + e.message; }
+        return;
+      }
+      out.textContent = "Panchayat baith rahi se... hukka lagane do...";
+      try {
+        const res = await callOpenAI([
+          { role: "system", content: "You are Sarpanch of 'Tau Ki Panchayat' in Haryana. Given a situation, reply in funny Hinglish Haryanvi with 3 clear sections: 1) Sarpanch Observation, 2) Funny Panchayat Verdict (humorous desi punishment/ruling), 3) Sensible Practical Advice." },
+          { role: "user", content: inp }
+        ]);
+        out.textContent = res;
+        setTauExpression("think", "⚖️", "⚖️ Panchayat ka faisla aa gya!", 3500);
+      } catch { out.textContent = evaluatePanchayatOffline(inp); }
     });
 
+    // ================= 2. KAND DETECTOR (1–10) =================
     function evaluateKandOffline(story) {
       const s = story.toLowerCase();
       let score = 4;
-      ["police", "jail", "accident", "crash", "boss", "fired", "leaked", "screenshot", "gf", "bf", "papa", "mummy", "caught", "pakda", "fail"].forEach(w => { if (s.includes(w)) score += 2; });
-      ["late", "forgot", "bhool", "dost", "bike", "car", "phone", "exam", "jhooth", "lie"].forEach(w => { if (s.includes(w)) score += 1; });
+      const high = ["police", "jail", "accident", "crash", "boss", "fired", "leaked", "screenshot", "gf", "bf", "papa", "mummy", "principal", "caught", "pakda", "fail"];
+      const med = ["late", "forgot", "bhool", "dost", "bike", "car", "phone", "exam", "jhooth", "lie"];
+      high.forEach(w => { if (s.includes(w)) score += 2; });
+      med.forEach(w => { if (s.includes(w)) score += 1; });
       score = Math.max(1, Math.min(10, score));
       let tier = "Chhota Pataka 🧨", expl = "Koi na laadle, yo toh halka-fulka kand se—ek sorry ya chai se nipat jaavega!";
-      if (score >= 9) { tier = "LEGENDARY MAHAKAND 💀🔥"; expl = "Arre bawli booch! Tune toh itihaas rach diya! Ib chup-chaap nani ke ghar nikal ja 2 din ke liye!"; }
-      else if (score >= 7) { tier = "Bada Kand 🚨"; expl = "Maamla garam se bhai! Gharwalon ya boss ke saamne bholi shakal bana ke rakhna!"; }
-      else if (score >= 5) { tier = "Chopal Pe Charcha 🗣️"; expl = "Theek-thaak raita faila diya tune—doston ke paas meme material ready se!"; }
+      if (score >= 9) { tier = "LEGENDARY MAHAKAND 💀🔥"; expl = "Arre bawli booch! Tune toh itihaas rach diya! Ib chुप-chaap gaon chhod ke nani ke ghar nikal ja 2 din ke liye!"; }
+      else if (score >= 7) { tier = "Bada Kand 🚨"; expl = "Maamla garam se bhai! Gharwalon ya boss ke saamne bholi shakal bana ke rakhna hi ekमात्र upaay se!"; }
+      else if (score >= 5) { tier = "Chopal Pe Charcha 🗣️"; expl = "Theek-thaak raita faila diya tune—doston ke paas agle 6 mahine ke liye meme material ready se!"; }
       return { score, tier, expl };
     }
 
@@ -1256,50 +1394,79 @@
       const inp = document.getElementById("kandInput").value.trim();
       if (!inp) { showToast("Pehle kand likh toh sahi!"); return; }
       const wrap = document.getElementById("kandResultWrap"), fill = document.getElementById("kandMeterFill"), scTxt = document.getElementById("kandScoreText"), trTxt = document.getElementById("kandTierText"), out = document.getElementById("kandOut");
-      wrap.style.display = "flex"; out.textContent = "Kand Meter scan kar raha se...";
+      wrap.style.display = "flex";
       const resOff = evaluateKandOffline(inp);
+      const key = document.getElementById("apiKey").value.trim();
+
       let finalScore = resOff.score, finalTier = resOff.tier, finalExpl = resOff.expl;
-      try {
-        const ai = await askTauAI(
-          [{ role: "system", content: "Rate the incident's 'Kand Level' from 1 to 10 in funny Haryanvi Hinglish. First line MUST be 'SCORE: X/10', followed by a hilarious explanation and survival tip." }, { role: "user", content: inp }],
-          () => `SCORE: ${resOff.score}/10\n${resOff.tier}\n\n${resOff.expl}`
-        );
-        const m = ai.match(/(\d{1,2})\s*\/\s*10/);
-        if (m) finalScore = Math.max(1, Math.min(10, parseInt(m[1], 10)));
-        finalExpl = ai;
-      } catch (e) { finalExpl = "⚠️ " + e.message; }
-      scTxt.textContent = `Kand Score: ${finalScore} / 10`; trTxt.textContent = finalTier;
-      fill.style.width = (finalScore * 10) + "%"; out.textContent = finalExpl;
-      setTauExpression(finalScore >= 7 ? "shock" : "laugh", finalScore >= 7 ? "😱" : "😂", finalScore >= 7 ? "😱 Arre baap re! Bada kand!" : "😂 Chhota mota kand se!", 4500);
+      if (key) {
+        out.textContent = "Kand Meter scan kar raha se...";
+        try {
+          const ai = await callOpenAI([
+            { role: "system", content: "Rate the user's described incident's 'Kand Level' from 1 to 10 in funny Haryanvi Hinglish. First line MUST be 'SCORE: X/10' where X is 1-10, followed by a hilarious explanation and survival tip." },
+            { role: "user", content: inp }
+          ]);
+          const m = ai.match(/(\d{1,2})\s*\/\s*10/);
+          if (m) finalScore = Math.max(1, Math.min(10, parseInt(m[1], 10)));
+          finalExpl = ai;
+        } catch {}
+      }
+      scTxt.textContent = `Kand Score: ${finalScore} / 10`;
+      trTxt.textContent = finalTier;
+      fill.style.width = (finalScore * 10) + "%";
+      out.textContent = finalExpl;
+      setTauExpression(finalScore >= 7 ? "shock" : "laugh", finalScore >= 7 ? "😱" : "😂", finalScore >= 7 ? "😱 Arre baap re! Bada kand kar diya!" : "😂 Chhota mota kand se bhai!", 4500);
     });
 
+    // ================= 3. SAVAGE REPLY GENERATOR =================
     function generateSavageRepliesOffline(msg, tone) {
-      const t = {
-        savage: ["1) Bhai tera message padh ke mere phone ki battery bhi sharma ke 1% ho gyi—abhi busy su! 🔥", "2) Itna confidence kahan te laate ho bhai? Thoda apne kaam pe bhi laga liya karo! 😎", "3) Sun laadle, free ka gyaan aur tera message—dono mere kaam ke koni! 🫡"],
-        funny:  ["1) Arre wah, aaj toh suraj pashchim te nikla lagge se jo tune yaad kiya! 😂", "2) Ruko bhai, pehle chashma dho ke padh lu—itni badi baat likh di tune! 🤣", "3) Haan bhai bilkul! Bas pehle bhains ko chaara daal du, fer reply karta hu! 🐃😂"],
-        witty:  ["1) Baat toh teri sahi se, par Tau ke schedule mein abhi sirf moj likhi se! 😎", "2) Dil pe mat le bhai, main ignore nahi kar raha—bas mental peace save kar raha hu! ✨", "3) Interesting baat kahi tune... ispe kabhi chopal mein charcha karenge! ☕"],
-        polite: ["1) Ram Ram bhai! Abhi thoda kaam mein fasa hu, free hote hi baat karta hu. 🙏", "2) Bahut badhiya baat kahi aapne, main ispe zaroor dhyan dunga. Dhanyawad! 🤝", "3) Maaf karna bhai, abhi possible nahi ho paayega—agli baar pakka! 😊"]
+      const templates = {
+        savage: [
+          `1) Bhai tera message padh ke mere phone ki battery bhi sharma ke 1% ho gyi—abhi busy su! 🔥`,
+          `2) Itna confidence kahan te laate ho bhai? Thoda udhaar apne kaam pe bhi laga liya karo! 😎`,
+          `3) Sun laadle, free ka gyaan aur tera message—dono mere kaam ke koni! 🫡`
+        ],
+        funny: [
+          `1) Arre wah, aaj toh suraj pashchim te nikla lagge se jo tune yaad kiya! 😂`,
+          `2) Ruko bhai, pehle chashma dho ke padh lu—itni badi baat likh di tune! 🤣`,
+          `3) Haan bhai, bilkul! Bas pehle bhains ko chaara daal du, fer reply karta hu! 🐃😂`
+        ],
+        witty: [
+          `1) Baat toh teri sahi se, par Tau ke schedule mein abhi sirf moj likhi se! 😎`,
+          `2) Dil pe mat le bhai, main ignore nahi kar raha—bas mental peace save kar raha hu! ✨`,
+          `3) Interesting baat kahi tune... ispe kabhi chopal mein charcha karenge! ☕`
+        ],
+        polite: [
+          `1) Ram Ram bhai! Abhi thoda kaam mein fasa hu, free hote hi aaram te baat karta hu. 🙏`,
+          `2) Bahut badhiya baat kahi aapne, main ispe zaroor dhyan dunga. Dhanyawad! 🤝`,
+          `3) Maaf karna bhai, abhi possible nahi ho paayega—agli baar pakka dekhenge! 😊`
+        ]
       };
-      return t[tone] || t.savage;
+      return templates[tone] || templates.savage;
     }
 
     document.getElementById("btnSavage").addEventListener("click", () => { openModal("savageModal"); toggleDrawer(false); });
     document.getElementById("runSavageBtn").addEventListener("click", async () => {
       const inp = document.getElementById("savageInput").value.trim(), tone = document.getElementById("savageTone").value, out = document.getElementById("savageOut");
       if (!inp) { showToast("Message paste kar pehle!"); return; }
-      out.innerHTML = `<div class="mod-out">Tau teekhe replies likh raha se...</div>`;
+      out.innerHTML = "";
       let replies = generateSavageRepliesOffline(inp, tone);
-      try {
-        const ai = await askTauAI(
-          [{ role: "system", content: `Generate 3 distinct, short, hilarious Haryanvi/Hinglish replies to this message in "${tone}" tone (not genuinely hurtful). Number them 1), 2), 3).` }, { role: "user", content: inp }],
-          () => replies.join("\n")
-        );
-        replies = ai.split(/\n(?=\d\))/).map(s => s.trim()).filter(Boolean);
-        if (replies.length === 0) replies = [ai];
-      } catch (e) { replies = ["⚠️ " + e.message]; }
+      const key = document.getElementById("apiKey").value.trim();
+      if (key) {
+        out.innerHTML = `<div class="mod-out">Tau teekhe replies likh raha se...</div>`;
+        try {
+          const ai = await callOpenAI([
+            { role: "system", content: `Generate 3 distinct, short, hilarious Haryanvi/Hinglish replies to the user's pasted message in "${tone}" tone (not genuinely hurtful). Number them 1), 2), 3).` },
+            { role: "user", content: inp }
+          ]);
+          replies = ai.split(/\n(?=\d\))/).map(s => s.trim()).filter(Boolean);
+          if (replies.length === 0) replies = [ai];
+        } catch {}
+      }
       out.innerHTML = "";
       replies.forEach(r => {
-        const card = document.createElement("div"); card.className = "card-item"; card.innerHTML = `<div>${r.replace(/</g, "&lt;")}</div>`;
+        const card = document.createElement("div"); card.className = "card-item";
+        card.innerHTML = `<div>${r.replace(/</g, "&lt;")}</div>`;
         const b = document.createElement("button"); b.className = "btn-sm"; b.textContent = "📋 Copy Reply"; b.style.width = "fit-content";
         b.onclick = async () => { await navigator.clipboard?.writeText(r.replace(/^\d\)\s*/, "")); showToast("Reply copied!"); };
         card.appendChild(b); out.appendChild(card);
@@ -1307,10 +1474,19 @@
       setTauExpression(tone === "savage" ? "angry" : "swag", tone === "savage" ? "🔥" : "😎", "🔥 Kadak replies taiyaar hain!", 3000);
     });
 
+    // ================= 4. ROAST BATTLE ARENA =================
     let battle = { round: 1, max: 3, user: 0, tau: 0, over: false };
     const uScoreEl = document.getElementById("userBattleScore"), tScoreEl = document.getElementById("tauBattleScore"), bRoundEl = document.getElementById("battleRoundText"), bLogEl = document.getElementById("battleLog"), bInputEl = document.getElementById("battleInput");
-    const TAU_COMEBACKS = ["Bas itna hi dum tha? Teri lines toh bina namak ki lassi jaisi feeki hain laadle! 🔥", "Arre wah! Achhi koshish ki par Tau ke red pagdi swag ke aage tu abhi nursery mein se! 😎", "Teri roast sun ke meri muchh bhi has padi! Agli baar doodh-dahi kha ke aana! 🥛🔥"];
-    function resetBattle() { battle = { round: 1, max: 3, user: 0, tau: 0, over: false }; uScoreEl.textContent = "0"; tScoreEl.textContent = "0"; bRoundEl.textContent = "Round 1 / 3"; bLogEl.innerHTML = `<div class="mod-out">🥊 Maidan mein aa ja laadle! Round 1 shuru—pehle tu roast maar!</div>`; }
+    const TAU_COMEBACKS = [
+      "Bas itna hi dum tha? Teri lines toh bina namak ki lassi jaisi feeki hain laadle! 🔥",
+      "Arre wah! Achhi koshish ki par Tau ke red pagdi swag ke aage tu abhi nursery mein se! 😎",
+      "Teri roast sun ke meri muchh bhi has padi! Agli baar thoda doodh-dahi kha ke aana! 🥛🔥"
+    ];
+    function resetBattle() {
+      battle = { round: 1, max: 3, user: 0, tau: 0, over: false };
+      uScoreEl.textContent = "0"; tScoreEl.textContent = "0"; bRoundEl.textContent = "Round 1 / 3";
+      bLogEl.innerHTML = `<div class="mod-out">🥊 Maidan mein aa ja laadle! Round 1 shuru—pehle tu roast maar!</div>`;
+    }
     document.getElementById("btnBattle").addEventListener("click", () => { openModal("battleModal"); toggleDrawer(false); });
     document.getElementById("resetBattleBtn").addEventListener("click", resetBattle);
     document.getElementById("sendBattleBtn").addEventListener("click", async () => {
@@ -1318,43 +1494,76 @@
       const uText = bInputEl.value.trim(); if (!uText) return;
       bInputEl.value = "";
       bLogEl.innerHTML += `<div class="card-item" style="border-color:#facc15;"><strong>You (R${battle.round}):</strong> ${uText.replace(/</g, "&lt;")}</div>`;
-      const uPts = Math.min(10, Math.max(5, Math.floor(uText.length / 6) + 5)), tPts = Math.floor(Math.random() * 4) + 6;
+
+      const uPts = Math.min(10, Math.max(5, Math.floor(uText.length / 6) + 5));
+      const tPts = Math.floor(Math.random() * 4) + 6;
       let comeback = TAU_COMEBACKS[(battle.round - 1) % TAU_COMEBACKS.length];
-      try {
-        comeback = await askTauAI(
-          [{ role: "system", content: "You are Tau in a friendly Haryanvi Roast Battle! Give a short, hilarious, punchy 2-line Haryanvi comeback to the user's roast." }, { role: "user", content: uText }],
-          () => comeback
-        );
-      } catch {}
+      const key = document.getElementById("apiKey").value.trim();
+      if (key) {
+        try {
+          comeback = await callOpenAI([
+            { role: "system", content: "You are Tau in a friendly Haryanvi Roast Battle! Give a short, hilarious, punchy 2-line Haryanvi comeback to the user's roast (never genuinely offensive)." },
+            { role: "user", content: uText }
+          ]);
+        } catch {}
+      }
       battle.user += uPts; battle.tau += tPts;
       uScoreEl.textContent = battle.user; tScoreEl.textContent = battle.tau;
       bLogEl.innerHTML += `<div class="mod-out"><strong>Tau (${tPts} pts vs Your ${uPts} pts):</strong>\n${comeback.replace(/</g, "&lt;")}</div>`;
+
       if (battle.round >= battle.max) {
         battle.over = true;
-        const win = battle.user > battle.tau ? "🏆 JEET GYA TU LAADLE! Kati Gadar!" : battle.user < battle.tau ? "🏆 TAU JEET GYA! Doodh-dahi ka dum!" : "🤝 TIE!";
-        bRoundEl.textContent = "Finished!"; bLogEl.innerHTML += `<div class="mod-out" style="border-color:#facc15;color:#facc15;font-weight:800;">${win}</div>`;
-      } else { battle.round++; bRoundEl.textContent = `Round ${battle.round} / 3`; }
-      bLogEl.scrollTop = bLogEl.scrollHeight; setTauExpression("angry", "🥊", "🥊 Roast battle garam chal rya se!", 3000);
+        const win = battle.user > battle.tau ? "🏆 JEET GYA TU LAADLE! Kati Gadar!" : battle.user < battle.tau ? "🏆 TAU JEET GYA! Doodh-dahi ka dum!" : "🤝 BARABARI KA MUKABLA (TIE)!";
+        bRoundEl.textContent = "Finished!";
+        bLogEl.innerHTML += `<div class="mod-out" style="border-color:#facc15;color:#facc15;font-weight:800;">${win}</div>`;
+      } else {
+        battle.round++;
+        bRoundEl.textContent = `Round ${battle.round} / 3`;
+      }
+      bLogEl.scrollTop = bLogEl.scrollHeight;
+      setTauExpression("angry", "🥊", "🥊 Roast battle garam chal rya se!", 3000);
     });
 
+    // ================= 6. HARYANVI TRANSLATOR (WITH SLANG INTENSITY) =================
     function translateHaryanviOffline(input, intensity) {
       let s = input.trim();
-      [[/how are you\??/gi, "ke haal se"], [/what are you doing\??/gi, "ke kar raha se"], [/where are you going\??/gi, "kitt jaave se"], [/i am fine/gi, "main kati thik su"], [/thank you|thanks/gi, "ghana shukriya"], [/very tired/gi, "ghana thak gya"], [/very good|awesome/gi, "kati gadar"], [/don't know|do not know/gi, "manne bera koni"], [/brother|bro/gi, "bhai"], [/friend/gi, "yaar"], [/kaise ho\??/gi, "ke haal se"], [/kya kar rahe ho\??/gi, "ke kare se"], [/bahut/gi, "ghana"], [/nahi\b/gi, "koni"], [/hai\b/gi, "se"], [/kya\b/gi, "ke"]].forEach(([p, r]) => { s = s.replace(p, r); });
+      const base = [
+        [/how are you\??/gi, "ke haal se"],
+        [/what are you doing\??/gi, "ke kar raha se"],
+        [/where are you going\??/gi, "kitt jaave se"],
+        [/i am fine/gi, "main kati thik su"],
+        [/thank you|thanks/gi, "ghana shukriya"],
+        [/very tired/gi, "ghana thak gya"],
+        [/very good|awesome/gi, "kati gadar"],
+        [/don't know|do not know/gi, "manne bera koni"],
+        [/brother|bro/gi, "bhai"],
+        [/friend/gi, "yaar"],
+        [/kaise ho\??/gi, "ke haal se"],
+        [/kya kar rahe ho\??/gi, "ke kare se"],
+        [/bahut/gi, "ghana"],
+        [/nahi\b/gi, "koni"],
+        [/hai\b/gi, "se"],
+        [/kya\b/gi, "ke"]
+      ];
+      base.forEach(([p, r]) => { s = s.replace(p, r); });
       if (intensity === "mild") return s + " bhai!";
       if (intensity === "medium") return s + " laadle!";
       return `Arre sun bawli booch: ${s}, samjha ke?! 🔥`;
     }
+
     document.getElementById("btnTranslator").addEventListener("click", () => { openModal("transModal"); toggleDrawer(false); });
     document.getElementById("doTranslateBtn").addEventListener("click", async () => {
       const inp = document.getElementById("transInput").value.trim(), intensity = document.getElementById("transIntensity").value, out = document.getElementById("transOutput");
       if (!inp) { showToast("Sentence likh pehle!"); return; }
+      const key = document.getElementById("apiKey").value.trim();
+      if (!key) { out.textContent = translateHaryanviOffline(inp, intensity); return; }
       out.textContent = "Translate ho raha se...";
       try {
-        out.textContent = await askTauAI(
-          [{ role: "system", content: `Translate English/Hindi into natural Romanized Haryanvi with "${intensity}" slang intensity.` }, { role: "user", content: inp }],
-          () => translateHaryanviOffline(inp, intensity)
-        );
-      } catch (e) { out.textContent = "⚠️ " + e.message; }
+        out.textContent = await callOpenAI([
+          { role: "system", content: `Translate English/Hindi into natural Romanized Haryanvi with "${intensity}" slang intensity (mild = light Haryanvi words, medium = everyday Rohtak dialect, hardcore = full desi Tau idioms like bawli booch, kati jeher, bera koni).` },
+          { role: "user", content: inp }
+        ]);
+      } catch { out.textContent = translateHaryanviOffline(inp, intensity); }
     });
     document.getElementById("copyTransBtn").addEventListener("click", async () => { await navigator.clipboard?.writeText(document.getElementById("transOutput").textContent); showToast("Copied!"); });
     document.getElementById("sendTransChatBtn").addEventListener("click", () => { const i = document.getElementById("transInput").value.trim(); closeModal("transModal"); if (i) sendUserMessage("/translate " + i); });
@@ -1413,6 +1622,7 @@
       if (msg.content) { const t = document.createElement("div"); t.textContent = msg.content; bubble.appendChild(t); }
       wrap.appendChild(bubble);
 
+      // User-approved Memory suggestion chip
       if (msg.memCandidate && !msg.memHandled) {
         const chip = document.createElement("div"); chip.className = "mem-prompt";
         chip.innerHTML = `<span>🧠 Yaad rakhu: <strong>${msg.memCandidate.replace(/</g, "&lt;")}</strong>?</span>`;
@@ -1458,7 +1668,8 @@
       const body = document.getElementById("favsBody"); body.innerHTML = "";
       if (favs.length === 0) body.innerHTML = `<p style="color:#9ca3af;">Abhi koi reply save nahi kiya bhai!</p>`;
       else favs.forEach((f, idx) => {
-        const card = document.createElement("div"); card.className = "card-item"; card.innerHTML = `<div>${f.text.replace(/</g, "&lt;")}</div>`;
+        const card = document.createElement("div"); card.className = "card-item";
+        card.innerHTML = `<div>${f.text.replace(/</g, "&lt;")}</div>`;
         const r = document.createElement("div"); r.style.cssText = "display:flex;gap:6px;";
         const c = document.createElement("button"); c.className = "btn-sm"; c.textContent = "📋 Copy"; c.onclick = async () => { await navigator.clipboard?.writeText(f.text); showToast("Copied!"); };
         const d = document.createElement("button"); d.className = "btn-sm"; d.textContent = "🗑️ Remove"; d.onclick = () => { favs.splice(idx, 1); saveFavs(); document.getElementById("btnFavs").click(); renderChat(); };
@@ -1487,10 +1698,14 @@
     emojiBtn.addEventListener("click", e => { e.stopPropagation(); emojiPopover.classList.toggle("open"); });
 
     const SECRET_CMDS = [
-      { cmd: "/roast", desc: "Funny Haryanvi roast" }, { cmd: "/joke", desc: "Random Haryanvi joke" },
-      { cmd: "/panchayat", desc: "Tau Ki Panchayat verdict" }, { cmd: "/gyaan", desc: "Educational desi gyaan" },
-      { cmd: "/translate", desc: "Translate to Haryanvi" }, { cmd: "/kand", desc: "Rate kand level (1–10)" },
-      { cmd: "/savage", desc: "Generate savage reply" }, { cmd: "/memory", desc: "Show Tau's memory" },
+      { cmd: "/roast", desc: "Funny Haryanvi roast" },
+      { cmd: "/joke", desc: "Random Haryanvi joke" },
+      { cmd: "/panchayat", desc: "Tau Ki Panchayat verdict" },
+      { cmd: "/gyaan", desc: "Educational desi gyaan" },
+      { cmd: "/translate", desc: "Translate to Haryanvi" },
+      { cmd: "/kand", desc: "Rate kand level (1–10)" },
+      { cmd: "/savage", desc: "Generate savage reply" },
+      { cmd: "/memory", desc: "Show Tau's memory" },
       { cmd: "/help", desc: "Show all secret commands" }
     ];
     promptEl.addEventListener("input", () => {
@@ -1505,7 +1720,9 @@
           cmdPopover.appendChild(btn);
         });
         cmdPopover.classList.toggle("open", matches.length > 0);
-      } else { cmdPopover.classList.remove("open"); }
+      } else {
+        cmdPopover.classList.remove("open");
+      }
     });
     document.addEventListener("click", e => {
       if (!emojiPopover.contains(e.target) && e.target !== emojiBtn) emojiPopover.classList.remove("open");
@@ -1523,8 +1740,25 @@
     }
     micBtn.addEventListener("click", () => { if (!recognition) { alert("Chrome ya Edge use karo voice input ke liye!"); return; } if (isListening) recognition.stop(); else { recognition.lang = settings.language === "Hindi" ? "hi-IN" : "en-IN"; recognition.start(); } });
 
-    // ================= CHATBOT ENGINE =================
-    const form = document.getElementById("form");
+    // ================= OPENAI HELPER + SECRET COMMANDS + CHAT ENGINE =================
+    const form = document.getElementById("form"), apiKeyEl = document.getElementById("apiKey"), modeBadge = document.getElementById("modeBadge");
+    apiKeyEl.addEventListener("input", () => {
+      const live = apiKeyEl.value.trim().startsWith("sk-");
+      modeBadge.textContent = live ? "Live AI Mode" : "Demo Mode";
+      modeBadge.className = live ? "badge live" : "badge";
+    });
+
+    async function callOpenAI(messages) {
+      const key = apiKeyEl.value.trim();
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
+        body: JSON.stringify({ model: "gpt-6-luna", reasoning_effort: "none", temperature: 0.9, messages })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || "API error");
+      return data.choices[0].message.content;
+    }
 
     function buildSystemPrompt(moodObj) {
       const modeMap = {
@@ -1544,61 +1778,82 @@
       `;
     }
 
-    function generateFallbackReply(text, moodObj, hasImage, imgName, variation = 0) {
-      const t = text.toLowerCase(), uname = getUserNameFromMemory(), greet = uname ? `${uname} laadle` : "laadle";
-      if (hasImage) return `Oye hoye ${greet}! Ye "${imgName || "photo"}" mast bheji se tune!`;
-      if (t.includes("joke") || activeMode === "joke") return JOKES_BANK[(Math.floor(Math.random() * JOKES_BANK.length) + variation) % JOKES_BANK.length];
-      if (t.includes("roast") || activeMode === "roast") return ROASTS_BANK[(Math.floor(Math.random() * ROASTS_BANK.length) + variation) % ROASTS_BANK.length];
-      if (moodObj.key === "sad") return `Arre ${greet}, udaas kyun ho raha se? Tau khada se tere saath! 🤝💛`;
-      if (moodObj.key === "stressed") return `Thanda paani pi le ${greet}, itni tension mat le—sab thik ho jaavega! 🙏`;
-      if (activeMode === "flirt") return `Oye hoye ${greet}! Itni pyaari baatein karega toh Tau ka dil bhi khil jaavega! 😉💛`;
-      return `Ram Ram ${greet}! "${text}" wali baat badhiya se—bol aur ke madad karu? 😎`;
-    }
-
     async function handleSecretCommand(text, moodObj) {
-      const [rawCmd, ...rest] = text.trim().split(/\s+/), cmd = rawCmd.toLowerCase(), arg = rest.join(" ");
+      const [rawCmd, ...rest] = text.trim().split(/\s+/);
+      const cmd = rawCmd.toLowerCase();
+      const arg = rest.join(" ");
+      const key = apiKeyEl.value.trim();
+
       if (cmd === "/help") {
         setTauExpression("think", "📖", "📖 Secret commands list!", 3000);
         return `🕵️‍♂️ SECRET COMMANDS:\n• /roast [target] — Funny Haryanvi roast\n• /joke — Random Haryanvi joke\n• /panchayat [case] — Tau Ki Panchayat verdict\n• /gyaan [topic] — Desi gyaan\n• /translate [text] — Haryanvi translation\n• /kand [story] — Kand Detector (1–10)\n• /savage [msg] — Savage reply ideas\n• /memory — What Tau remembers`;
       }
       if (cmd === "/memory") {
         setTauExpression("think", "🧠", "🧠 Tau apni yaaddasht check kar raha se!", 3000);
-        return memories.length ? `🧠 Tau ko ye baatein yaad hain:\n• ${memories.join("\n• ")}` : "🧠 Abhi memory khaali se bhai!";
+        return memories.length ? `🧠 Tau ko ye baatein yaad hain:\n• ${memories.join("\n• ")}` : "🧠 Abhi memory khaali se bhai! Sidebar ke 🧠 Mem button se add kar le.";
       }
       if (cmd === "/panchayat") {
         const story = arg || "Mere dost ne party ka bol ke bill mujhpe daal diya!";
         setTauExpression("think", "⚖️", "⚖️ Panchayat baith gyi!", 3500);
-        return await askTauAI([{ role: "system", content: "Act as Sarpanch of Tau Ki Panchayat in funny Haryanvi Hinglish. Give Observation, Funny Verdict, and Sensible Advice." }, { role: "user", content: story }], () => evaluatePanchayatOffline(story));
+        if (key) return await callOpenAI([{ role: "system", content: "Act as Sarpanch of Tau Ki Panchayat in funny Haryanvi Hinglish. Give Observation, Funny Verdict, and Sensible Advice." }, { role: "user", content: story }]);
+        return evaluatePanchayatOffline(story);
       }
       if (cmd === "/kand") {
         const story = arg || "Galti se boss ke samne reel play ho gyi full volume mein!";
         const off = evaluateKandOffline(story);
         setTauExpression(off.score >= 7 ? "shock" : "laugh", off.score >= 7 ? "😱" : "🚨", "🚨 Kand scanned!", 3500);
-        return await askTauAI([{ role: "system", content: "Rate the Kand Level from 1 to 10 in funny Haryanvi Hinglish with explanation and survival tip." }, { role: "user", content: story }], () => `🚨 KAND DETECTOR\nScore: ${off.score}/10 — ${off.tier}\n\n${off.expl}`);
+        if (key) return await callOpenAI([{ role: "system", content: "Rate the Kand Level from 1 to 10 in funny Haryanvi Hinglish with explanation and survival tip." }, { role: "user", content: story }]);
+        return `🚨 KAND DETECTOR\nScore: ${off.score}/10 — ${off.tier}\n\n${off.expl}`;
       }
       if (cmd === "/translate") {
         const txt = arg || "How are you brother?";
         setTauExpression("swag", "🌐", "🌐 Haryanvi translation!", 3000);
-        return await askTauAI([{ role: "system", content: "Translate into natural funny Haryanvi Hinglish." }, { role: "user", content: txt }], () => "🌐 Haryanvi Translation:\n" + translateHaryanviOffline(txt, "hardcore"));
+        if (key) return await callOpenAI([{ role: "system", content: "Translate into natural funny Haryanvi Hinglish." }, { role: "user", content: txt }]);
+        return "🌐 Haryanvi Translation:\n" + translateHaryanviOffline(txt, "hardcore");
       }
       if (cmd === "/savage") {
         const msg = arg || "Bhai kal pakka milte hain";
         setTauExpression("angry", "🔥", "🔥 Savage replies ready!", 3000);
-        return await askTauAI([{ role: "system", content: "Give 3 witty, funny, savage Haryanvi replies to this message." }, { role: "user", content: msg }], () => "💬 Savage Replies:\n" + generateSavageRepliesOffline(msg, "savage").join("\n"));
+        if (key) return await callOpenAI([{ role: "system", content: "Give 3 witty, funny, savage Haryanvi replies to this message." }, { role: "user", content: msg }]);
+        return "💬 Savage Replies:\n" + generateSavageRepliesOffline(msg, "savage").join("\n");
       }
       if (cmd === "/roast") {
-        activeMode = "roast"; renderModes(); setTauExpression("angry", "🔥", "🔥 Roast mode activated!", 3500);
-        return await askTauAI([{ role: "system", content: buildSystemPrompt(moodObj) }, { role: "user", content: arg ? `Roast ${arg}` : "Give a funny friendly roast!" }], () => (arg ? `${arg} ke liye roast: ` : "") + ROASTS_BANK[Math.floor(Math.random() * ROASTS_BANK.length)]);
+        activeMode = "roast"; renderModes();
+        setTauExpression("angry", "🔥", "🔥 Roast mode activated!", 3500);
+        if (key) return await callOpenAI([{ role: "system", content: buildSystemPrompt(moodObj) }, { role: "user", content: arg ? `Roast ${arg}` : "Give a funny friendly roast!" }]);
+        return (arg ? `${arg} ke liye special roast: ` : "") + ROASTS_BANK[Math.floor(Math.random() * ROASTS_BANK.length)];
       }
       if (cmd === "/joke") {
-        activeMode = "joke"; renderModes(); setTauExpression("laugh", "😂", "😂 Haryanvi joke time!", 3500);
-        return await askTauAI([{ role: "system", content: buildSystemPrompt(moodObj) }, { role: "user", content: "Tell a hilarious Haryanvi joke!" }], () => JOKES_BANK[Math.floor(Math.random() * JOKES_BANK.length)]);
+        activeMode = "joke"; renderModes();
+        setTauExpression("laugh", "😂", "😂 Haryanvi joke time!", 3500);
+        if (key) return await callOpenAI([{ role: "system", content: buildSystemPrompt(moodObj) }, { role: "user", content: "Tell a hilarious Haryanvi joke!" }]);
+        return JOKES_BANK[Math.floor(Math.random() * JOKES_BANK.length)];
       }
       if (cmd === "/gyaan") {
-        activeMode = "gyaan"; renderModes(); setTauExpression("think", "🧠", "🧠 Tau ka gyaan!", 3500);
-        return await askTauAI([{ role: "system", content: buildSystemPrompt(moodObj) }, { role: "user", content: arg || "Give useful life or tech gyaan!" }], () => `🧠 Tau Ka Gyaan${arg ? " (" + arg + ")" : ""}:\nZindagi mein 3 cheezein pakki rakho—subah ka doodh-dahi, kaam mein imandari, aur faltu logon te doori!`);
+        activeMode = "gyaan"; renderModes();
+        setTauExpression("think", "🧠", "🧠 Tau ka gyaan!", 3500);
+        if (key) return await callOpenAI([{ role: "system", content: buildSystemPrompt(moodObj) }, { role: "user", content: arg || "Give useful life or tech gyaan!" }]);
+        return `🧠 Tau Ka Gyaan${arg ? " (" + arg + ")" : ""}:\nZindagi mein 3 cheezein pakki rakho—subah ka doodh-dahi, kaam mein imandari, aur faltu logon te doori! Baaki sab kati set ho jaavega!`;
       }
       return null;
+    }
+
+    function generateDemoReply(text, moodObj, hasImage, imgName, variation = 0) {
+      const t = text.toLowerCase();
+      const uname = getUserNameFromMemory();
+      const greet = uname ? `${uname} laadle` : "laadle";
+
+      if (hasImage) return `Oye hoye ${greet}! Ye "${imgName || "photo"}" bheji se tune! Kati gadar lag rahi se—Live AI key daal de toh photo ki poori kahani bata dunga!`;
+      if (t.includes("joke") || activeMode === "joke") return JOKES_BANK[(Math.floor(Math.random() * JOKES_BANK.length) + variation) % JOKES_BANK.length];
+      if (t.includes("roast") || activeMode === "roast") return ROASTS_BANK[(Math.floor(Math.random() * ROASTS_BANK.length) + variation) % ROASTS_BANK.length];
+      if (t.includes("dialogue")) return "Pagdi laal, gamcha gale mein, aur chashma kaala—Tau ka swag sabte nirala! 🔥";
+      if (moodObj.key === "sad") return `Arre ${greet}, udaas kyun ho raha se? Tau khada se tere saath! Chahe koi bhi chakar ho, sab thik ho jayega—ek garm chai pi aur muskura! 🤝💛`;
+      if (moodObj.key === "stressed") return `Thanda paani pi le ${greet}, itni tension mein dimaag ka dahi mat bana! Jo problem se mil ke suljha lenge! 🙏`;
+      if (moodObj.key === "kand") return `Oye ${greet}! Kuch kand kar aaya ke? Sidebar mein 🚨 Kand Detector khol ke score check kar le—Tau bachane ki jugaad batayega!`;
+      if (activeMode === "flirt") return `Oye hoye ${greet}! Itni pyaari baatein karega toh Tau ka dil bhi sarson ke khet jaisa khil jaavega! 😉💛`;
+      if (activeMode === "gyaan" || t.includes("gyaan")) return `Sun ${greet}, gyaan ki baat: "${text}" samajhna bilkul aasaan se—bas consistency rakho! Live AI key daal de toh poora masterclass de dunga! 🧠`;
+      if (activeMode === "friendly") return `Ram Ram ${greet}! Teri "${text}" wali baat sun ke achha laga. Koi bhi help chahiye toh Tau yahin baitha se! 🤝`;
+      return `Sun ${greet}, "${text}" ki baat kar raha se? Tau ke aage sab chhote chakar hain—live AI key daal ke asli power dekh! 😎`;
     }
 
     function applyReactionForReply(moodObj) {
@@ -1607,11 +1862,17 @@
       else if (activeMode === "flirt" || moodObj.key === "romantic") setTauExpression("flirt", "😉", "😉 Tau full romantic mood mein!", 4000);
       else if (activeMode === "gyaan" || moodObj.key === "curious") setTauExpression("think", "🤔", "🤔 Gyaan barsa raha se Tau!", 4000);
       else if (moodObj.key === "kand") setTauExpression("shock", "😱", "😱 Yo ke kar diya bhai?!", 4000);
+      else if (moodObj.key === "sad") setTauExpression("swag", "💛", "💛 Tau tere saath se bhai!", 4000);
       else setTauExpression("swag", "😎", "😎 Full swag mein baitha se Tau!", 3000);
     }
 
-    async function fetchReply(chat, moodObj, variation = 0) {
+    async function fetchOrDemoReply(chat, moodObj, variation = 0) {
+      const key = apiKeyEl.value.trim();
       const lastUser = [...chat.messages].reverse().find(m => m.role === "user") || { content: "Hi" };
+      if (!key) {
+        await new Promise(r => setTimeout(r, 300));
+        return generateDemoReply(lastUser.content || "", moodObj, !!lastUser.image, lastUser.imageName, variation);
+      }
       const apiMessages = [
         { role: "system", content: buildSystemPrompt(moodObj) },
         ...chat.messages.filter(m => !m.pending).map(m => m.role === "user" && m.image
@@ -1619,13 +1880,14 @@
           : { role: m.role, content: m.content }
         )
       ];
-      return await askTauAI(apiMessages, () => generateFallbackReply(lastUser.content || "", moodObj, !!lastUser.image, lastUser.imageName, variation));
+      return await callOpenAI(apiMessages);
     }
 
     async function sendUserMessage(overrideText = null) {
       if (isListening && recognition) recognition.stop();
       const text = (overrideText !== null ? overrideText : promptEl.value).trim();
       if (!text && !pendingImageDataUrl) return;
+
       if (overrideText === null) promptEl.value = "";
       cmdPopover.classList.remove("open");
 
@@ -1650,12 +1912,18 @@
       try {
         let reply = null;
         if (text.startsWith("/")) reply = await handleSecretCommand(text, currentMood);
-        if (reply === null) { reply = await fetchReply(chat, currentMood, 0); applyReactionForReply(currentMood); }
-        pendingMsg.content = reply; delete pendingMsg.pending;
-        saveChats(); renderChat(); playPopSFX(); triggerTalking(1900); triggerThugDrop(); speakText(reply);
+        if (reply === null) {
+          reply = await fetchOrDemoReply(chat, currentMood, 0);
+          applyReactionForReply(currentMood);
+        }
+        pendingMsg.content = reply;
+        delete pendingMsg.pending;
+        saveChats(); renderChat();
+        playPopSFX(); triggerTalking(1900); triggerThugDrop(); speakText(reply);
       } catch (err) {
-        pendingMsg.content = "⚠️ Arre bhai gadbad ho gyi (Check Vercel OPENAI_API_KEY): " + err.message;
-        delete pendingMsg.pending; saveChats(); renderChat();
+        pendingMsg.content = "⚠️ Arre bhai gadbad ho gyi: " + err.message;
+        delete pendingMsg.pending;
+        saveChats(); renderChat();
       }
     }
 
@@ -1668,7 +1936,7 @@
       const pendingMsg = { id: "m_regen", role: "assistant", content: "Tau naya jawab soch raha se...", pending: true };
       chat.messages.push(pendingMsg); renderChat();
       try {
-        const reply = await fetchReply(chat, moodObj, Math.floor(Math.random() * 5) + 1);
+        const reply = await fetchOrDemoReply(chat, moodObj, Math.floor(Math.random() * 5) + 1);
         pendingMsg.content = reply; delete pendingMsg.pending;
         saveChats(); renderChat(); playPopSFX(); triggerTalking(1800); applyReactionForReply(moodObj); speakText(reply);
       } catch (err) {
