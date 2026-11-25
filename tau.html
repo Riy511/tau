@@ -1,0 +1,1952 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tau — Ultimate Haryanvi AI</title>
+  <style>
+    :root { --chat-font: 14.5px; }
+    * { box-sizing: border-box; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #1f1c0e 0%, #090a0d 70%);
+      color: #fefce8;
+      display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 8px;
+    }
+    .app {
+      position: relative; width: 100%; max-width: 1080px; height: 95vh;
+      background: #111318; border: 2px solid #eab308; border-radius: 18px;
+      display: flex; overflow: hidden; box-shadow: 0 24px 60px rgba(234, 179, 8, 0.16);
+    }
+
+    /* ================= INTRO OVERLAY ================= */
+    .intro-overlay {
+      position: absolute; inset: 0; z-index: 70;
+      background: radial-gradient(circle at 50% 30%, #2a2208 0%, #111318 55%, #07080a 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+      overflow: hidden; transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .intro-overlay.hide { opacity: 0; transform: scale(1.04); pointer-events: none; }
+
+    .intro-top-bar {
+      position: absolute; top: 14px; left: 14px; right: 14px; z-index: 75;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+      pointer-events: none;
+    }
+    .intro-pill-btn {
+      pointer-events: auto; padding: 8px 14px; border-radius: 999px;
+      border: 1.5px solid #facc15; background: rgba(17, 19, 24, 0.88);
+      color: #facc15; font-size: 0.78rem; font-weight: 800; cursor: pointer;
+      backdrop-filter: blur(6px); display: inline-flex; align-items: center; gap: 6px;
+      max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .intro-pill-btn:hover { background: #26220e; transform: scale(1.03); }
+    .intro-pill-btn.pulse { background: #facc15; color: #090a0d; animation: soundPulse 1.3s infinite; }
+    @keyframes soundPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 50% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } }
+
+    .intro-shake-wrap {
+      position: relative; width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      animation: screenShake 1.9s ease-in-out infinite;
+    }
+    @keyframes screenShake {
+      0%, 35% { transform: translate(0, 0); }
+      38% { transform: translate(-4px, 5px); }
+      41% { transform: translate(4px, -4px); }
+      44% { transform: translate(-3px, 3px); }
+      47% { transform: translate(2px, -2px); }
+      52%, 100% { transform: translate(0, 0); }
+    }
+
+    .village-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .cloud-slow { animation: cloudDrift 28s linear infinite; }
+    .cloud-slower { animation: cloudDrift 38s linear infinite reverse; }
+    @keyframes cloudDrift { 0% { transform: translateX(-35px); } 50% { transform: translateX(35px); } 100% { transform: translateX(-35px); } }
+    .crop-sway-1 { transform-origin: bottom center; animation: swayGentle 4s ease-in-out infinite; }
+    @keyframes swayGentle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2.5deg); } }
+    .lamp-1 { animation: floatLampA 7s ease-in-out infinite; }
+    .lamp-2 { animation: floatLampB 9s ease-in-out infinite; }
+    .lamp-3 { animation: floatLampA 8.5s ease-in-out 1.2s infinite reverse; }
+    .lamp-4 { animation: floatLampB 10s ease-in-out 0.7s infinite; }
+    .lamp-5 { animation: floatLampA 6.5s ease-in-out 2s infinite; }
+    .lamp-6 { animation: floatLampB 8s ease-in-out 1.5s infinite reverse; }
+    @keyframes floatLampA { 0%, 100% { transform: translate(0px, 0px); opacity: 0.85; } 50% { transform: translate(10px, -18px); opacity: 1; } }
+    @keyframes floatLampB { 0%, 100% { transform: translate(0px, 0px); opacity: 0.75; } 50% { transform: translate(-12px, -22px); opacity: 1; } }
+
+    .wooden-floor {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 43%; min-height: 210px; z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.62) 100%),
+        repeating-linear-gradient(90deg, transparent 0px, transparent 118px, rgba(15, 6, 1, 0.65) 118px, rgba(15, 6, 1, 0.65) 121px),
+        repeating-linear-gradient(180deg, #5c280b 0px, #4e2108 26px, #321303 27px, #321303 29px);
+      border-top: 3px solid #eab308; box-shadow: inset 0 14px 28px rgba(0,0,0,0.5);
+    }
+
+    .intro-center { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 12px 16px; }
+    .intro-char-wrap { width: min(355px, 92vw); height: auto; opacity: 0; }
+    .intro-overlay.play .intro-char-wrap { animation: charBounceIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    @keyframes charBounceIn { 0% { opacity: 0; transform: translateY(34px) scale(0.9); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    .danda-arm-group { transform-origin: 90px 128px; animation: dandaStamp 1.9s ease-in-out infinite; }
+    @keyframes dandaStamp { 0%, 100% { transform: translateY(0px) rotate(0deg); } 22% { transform: translateY(-18px) rotate(6deg); } 38% { transform: translateY(2px) rotate(-1deg); } 46% { transform: translateY(-3px) rotate(1deg); } 54% { transform: translateY(0px) rotate(0deg); } }
+    .dust-puff { transform-origin: 54px 221px; animation: dustBurst 1.9s ease-out infinite; }
+    @keyframes dustBurst { 0%, 36% { opacity: 0; transform: scale(0.3); } 42% { opacity: 0.95; transform: scale(1.1); } 74%, 100% { opacity: 0; transform: scale(1.65); } }
+    .stache-arm-group { transform-origin: 150px 128px; animation: setMoustache 1.9s ease-in-out infinite; }
+    @keyframes setMoustache { 0%, 100% { transform: rotate(0deg) translate(0, 0); } 35% { transform: rotate(-5deg) translate(-1px, -2px); } 65% { transform: rotate(2deg) translate(1px, 1px); } }
+    .intro-stache-left { transform-origin: 118px 96px; animation: wiggleLeft 1.9s ease-in-out infinite; }
+    .intro-stache-right { transform-origin: 122px 96px; animation: wiggleRight 1.9s ease-in-out infinite; }
+    @keyframes wiggleLeft { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(3.5deg); } }
+    @keyframes wiggleRight { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-3.5deg); } }
+
+    .intro-tau-title {
+      margin: 4px 0 14px; font-size: clamp(2.2rem, 5vw, 3rem);
+      font-weight: 900; letter-spacing: 0.06em; color: #facc15;
+      text-shadow: 0 3px 14px rgba(0, 0, 0, 0.85); opacity: 0;
+    }
+    .intro-overlay.play .intro-tau-title { animation: tauTitleReveal 0.85s ease-out 0.3s forwards; }
+    @keyframes tauTitleReveal { 0% { opacity: 0; transform: translateY(14px); letter-spacing: 0.18em; } 100% { opacity: 1; transform: translateY(0); letter-spacing: 0.06em; } }
+    @keyframes tauBtnReveal { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
+    .enter-btn {
+      padding: 12px 30px; border: 2px solid #fef08a; border-radius: 999px;
+      background: #facc15; color: #090a0d; font-size: 0.98rem; font-weight: 900;
+      cursor: pointer; box-shadow: 0 0 26px rgba(250, 204, 21, 0.45);
+      transition: transform 0.18s ease, background 0.18s ease; opacity: 0;
+    }
+    .intro-overlay.play .enter-btn { animation: tauBtnReveal 0.8s ease-out 0.65s forwards; }
+    .enter-btn:hover { background: #fde047; transform: scale(1.04); }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+      width: 284px; flex-shrink: 0; background: #0c0d11; border-right: 1px solid #eab30844;
+      display: flex; flex-direction: column; overflow: hidden; z-index: 45;
+      transition: transform 0.25s ease;
+    }
+    .side-top { padding: 10px; border-bottom: 1px solid #eab30833; display: flex; gap: 6px; }
+    .new-chat-btn {
+      flex: 1; padding: 9px 10px; border-radius: 10px; border: 1px solid #facc15;
+      background: #facc15; color: #090a0d; font-weight: 900; font-size: 0.86rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .new-chat-btn:hover { background: #fde047; }
+
+    .side-scroll { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; }
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.69rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: #eab308; font-weight: 800; padding: 0 2px 5px;
+    }
+
+    .mode-grid, .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+    .mode-pill {
+      padding: 6px 7px; border-radius: 8px; border: 1px solid #eab30833;
+      background: #161820; color: #e5e7eb; font-size: 0.74rem; font-weight: 700;
+      cursor: pointer; text-align: left; transition: all 0.15s;
+    }
+    .mode-pill:hover { background: #222530; border-color: #eab30888; }
+    .mode-pill.active { background: #facc15; color: #090a0d; border-color: #facc15; font-weight: 900; }
+
+    .tool-btn {
+      padding: 6px 6px; border-radius: 8px; border: 1px solid #eab30844;
+      background: #14171f; color: #fef08a; font-size: 0.72rem; font-weight: 700;
+      cursor: pointer; text-align: center;
+    }
+    .tool-btn:hover { background: #26220e; border-color: #facc15; color: #facc15; }
+
+    .hist-list { display: flex; flex-direction: column; gap: 4px; }
+    .side-item {
+      padding: 7px 9px; border-radius: 8px; cursor: pointer; font-size: 0.81rem;
+      color: #e5e7eb; display: flex; align-items: center; justify-content: space-between; gap: 6px;
+      border: 1px solid transparent;
+    }
+    .side-item:hover { background: #181a22; }
+    .side-item.active { background: #211d0d; border-color: #eab308; color: #facc15; font-weight: 700; }
+    .side-item-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+    .del-btn {
+      opacity: 0.6; background: none; border: none; color: #f87171; cursor: pointer;
+      font-size: 0.78rem; padding: 2px 4px; border-radius: 4px;
+    }
+    .del-btn:hover { opacity: 1; background: #7f1d1d44; }
+
+    .side-footer {
+      padding: 8px 10px; border-top: 1px solid #eab30833; background: #090a0d;
+      display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 4px;
+    }
+    .foot-btn {
+      padding: 7px 3px; border-radius: 8px; border: 1px solid #eab30844;
+      background: #15171e; color: #fef08a; font-size: 0.69rem; font-weight: 700;
+      cursor: pointer; text-align: center; white-space: nowrap;
+    }
+    .foot-btn:hover { background: #26220e; border-color: #facc15; }
+
+    .sidebar-backdrop { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.65); z-index: 40; }
+
+    /* ================= MAIN CHAT PANEL & CHARACTER REACTIONS ================= */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #111318; }
+
+    .tau-stage {
+      padding: 9px 14px;
+      background: linear-gradient(90deg, #1f1b0a 0%, #14161d 75%);
+      border-bottom: 1px solid #eab30855;
+      display: flex; align-items: center; gap: 11px;
+    }
+    .menu-btn {
+      display: none; background: #181a22; border: 1px solid #eab30877; color: #facc15;
+      border-radius: 8px; padding: 6px 10px; font-size: 1rem; cursor: pointer; font-weight: 700;
+    }
+    .tau-avatar-box { position: relative; flex-shrink: 0; }
+    .tau-avatar-wrap {
+      width: 66px; height: 66px;
+      background: #0b0c10; border: 2px solid #facc15; border-radius: 50%;
+      overflow: hidden; display: flex; align-items: flex-end; justify-content: center;
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.28); cursor: pointer;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .rxn-badge {
+      position: absolute; bottom: -2px; right: -4px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #facc15; color: #090a0d; border: 2px solid #090a0d;
+      display: flex; align-items: center; justify-content: center; font-size: 0.78rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    .tau-svg { width: 66px; height: 66px; overflow: visible; }
+    .tau-head-group { transform-origin: 100px 150px; animation: idleBreathe 3.2s ease-in-out infinite; }
+    .vibing .tau-head-group { animation: musicGroove 0.58s ease-in-out infinite; }
+    @keyframes idleBreathe { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-2px) rotate(1deg); } }
+    @keyframes musicGroove { 0%, 100% { transform: translateY(0px) rotate(-3deg); } 50% { transform: translateY(-4px) rotate(3deg); } }
+    .head-stache-left { transform-origin: 98px 121px; }
+    .head-stache-right { transform-origin: 102px 121px; }
+    .talking .head-stache-left, .vibing .head-stache-left { animation: wiggleLeft 0.45s ease-in-out infinite; }
+    .talking .head-stache-right, .vibing .head-stache-right { animation: wiggleRight 0.45s ease-in-out infinite; }
+    .thug-drop .thug-glasses { animation: thugDropAnim 0.75s cubic-bezier(0.22, 1, 0.36, 1); }
+    @keyframes thugDropAnim { 0% { transform: translateY(-52px); opacity: 0; } 60% { transform: translateY(3px); opacity: 1; } 100% { transform: translateY(0px); opacity: 1; } }
+
+    /* Dynamic Character Expression Classes */
+    .mouth-laugh, .mouth-shock, .eyes-shock, .brows-angry { display: none; }
+    .expr-laugh .mouth-normal { display: none; }
+    .expr-laugh .mouth-laugh { display: block; }
+    .expr-laugh .tau-head-group { animation: laughBounce 0.32s ease-in-out infinite; }
+    @keyframes laughBounce { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-4px) rotate(-2deg); } }
+
+    .expr-shock .mouth-normal { display: none; }
+    .expr-shock .mouth-shock, .expr-shock .eyes-shock { display: block; }
+    .expr-shock .thug-glasses { transform: translateY(9px) rotate(-4deg); transition: transform 0.25s; }
+    .expr-shock.tau-avatar-wrap { border-color: #ef4444; box-shadow: 0 0 18px rgba(239, 68, 68, 0.45); }
+
+    .expr-angry .brows-angry { display: block; }
+    .expr-angry.tau-avatar-wrap { border-color: #f97316; box-shadow: 0 0 18px rgba(249, 115, 22, 0.45); }
+
+    .expr-think .thug-glasses { transform: translateY(3px) rotate(3deg); transition: transform 0.25s; }
+    .expr-flirt.tau-avatar-wrap { border-color: #ec4899; box-shadow: 0 0 18px rgba(236, 72, 153, 0.4); }
+
+    .mouth-normal { transform-origin: 100px 131px; }
+    .talking .mouth-normal { animation: talkMouth 0.22s ease-in-out infinite; }
+    @keyframes talkMouth { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(2.2); } }
+
+    .tau-meta { flex: 1; min-width: 0; }
+    .tau-title-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .tau-meta h1 { margin: 0; font-size: 1.05rem; color: #facc15; }
+    .swag-pill {
+      font-size: 0.65rem; padding: 2px 8px; border-radius: 999px;
+      background: #facc15; color: #090a0d; font-weight: 900; text-transform: uppercase;
+    }
+    .mood-pill {
+      font-size: 0.65rem; padding: 2px 8px; border-radius: 999px;
+      background: #181a22; color: #fef08a; border: 1px solid #eab30866; font-weight: 700; cursor: pointer;
+    }
+    .tau-status { margin: 3px 0 0; font-size: 0.77rem; color: #fef08a; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .music-bar {
+      padding: 6px 14px; background: #0e1015; border-bottom: 1px solid #eab30833;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+    }
+    .song-info { display: flex; align-items: center; gap: 6px; font-size: 0.77rem; font-weight: 700; color: #facc15; min-width: 0; }
+    .song-info span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 185px; }
+    .music-controls { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+    .btn-sm {
+      padding: 4px 8px; border-radius: 7px; border: 1px solid #eab30855;
+      background: #181a22; color: #fefce8; font-size: 0.72rem; cursor: pointer; font-weight: 700;
+    }
+    .btn-sm:hover { background: #262934; }
+    .btn-sm.play { background: #facc15; color: #090a0d; border-color: #facc15; }
+    .vol-slider { width: 52px; accent-color: #facc15; cursor: pointer; }
+
+    .config {
+      padding: 6px 14px; background: #14161d; border-bottom: 1px solid #eab30833;
+      display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    }
+    .config input {
+      flex: 1; min-width: 150px; padding: 5px 10px; border-radius: 8px;
+      border: 1px solid #eab30844; background: #0b0c10; color: #fefce8; font-size: 0.78rem;
+    }
+    .badge {
+      font-size: 0.68rem; padding: 3px 8px; border-radius: 999px;
+      background: #eab30822; color: #facc15; border: 1px solid #eab30866; font-weight: 700;
+    }
+    .badge.live { background: #facc15; color: #090a0d; border-color: #facc15; }
+
+    /* Daily Kand Banner */
+    .daily-kand-bar {
+      padding: 6px 14px; background: #1a170b; border-bottom: 1px solid #eab30833;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      font-size: 0.77rem; color: #fef08a;
+    }
+    .daily-kand-bar strong { color: #facc15; }
+
+    /* Chat Window */
+    .chat { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #111318; }
+    .msg-wrap { display: flex; flex-direction: column; max-width: 85%; }
+    .msg-wrap.user { align-self: flex-end; align-items: flex-end; }
+    .msg-wrap.bot { align-self: flex-start; align-items: flex-start; }
+    .msg {
+      padding: 10px 14px; border-radius: 14px; line-height: 1.48;
+      font-size: var(--chat-font); white-space: pre-wrap; word-break: break-word;
+    }
+    .msg-wrap.bot .msg { background: #1b1e26; color: #fefce8; border: 1px solid #eab30844; border-bottom-left-radius: 4px; }
+    .msg-wrap.user .msg { background: #facc15; color: #090a0d; font-weight: 600; border-bottom-right-radius: 4px; }
+    .msg-img { max-width: 220px; max-height: 180px; border-radius: 10px; margin-bottom: 6px; border: 2px solid #090a0d33; display: block; object-fit: cover; }
+
+    .msg-actions { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+    .act-btn {
+      background: #181a22; border: 1px solid #eab30833; color: #d1d5db;
+      border-radius: 6px; padding: 2px 7px; font-size: 0.7rem; cursor: pointer;
+    }
+    .act-btn:hover { background: #26220e; color: #facc15; border-color: #eab30888; }
+    .act-btn.fav-on { background: #facc15; color: #090a0d; border-color: #facc15; font-weight: 800; }
+
+    /* Memory Approval Chip */
+    .mem-prompt {
+      margin-top: 5px; padding: 6px 10px; border-radius: 10px;
+      background: #1a180b; border: 1px solid #eab30877;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.75rem; color: #fef08a;
+    }
+
+    /* Suggested Prompts */
+    .starters-wrap { margin-top: 4px; padding: 12px; border-radius: 14px; background: #161820; border: 1px dashed #eab30855; }
+    .starters-title { font-size: 0.76rem; color: #facc15; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .starters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 7px; }
+    .starter-card {
+      padding: 9px 11px; border-radius: 10px; border: 1px solid #eab30844;
+      background: #111318; color: #fefce8; font-size: 0.81rem; font-weight: 600;
+      cursor: pointer; text-align: left; transition: all 0.15s;
+    }
+    .starter-card:hover { background: #26220e; border-color: #facc15; color: #facc15; transform: translateY(-1px); }
+
+    /* Input Area + Popovers */
+    .input-area {
+      position: relative; background: #0c0d11; border-top: 1px solid #eab30844;
+      padding: 8px 12px 10px; display: flex; flex-direction: column; gap: 6px;
+    }
+    .attach-preview {
+      display: none; align-items: center; gap: 8px; padding: 5px 8px;
+      background: #181a22; border: 1px solid #eab30855; border-radius: 8px; width: fit-content;
+    }
+    .attach-preview img { width: 38px; height: 38px; border-radius: 6px; object-fit: cover; }
+    .attach-preview span { font-size: 0.76rem; color: #fef08a; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .emoji-popover {
+      display: none; position: absolute; bottom: 62px; left: 12px; z-index: 55;
+      background: #181a22; border: 1.5px solid #eab308; border-radius: 12px;
+      padding: 8px; gap: 6px; grid-template-columns: repeat(6, 1fr); box-shadow: 0 10px 30px rgba(0,0,0,0.65);
+    }
+    .emoji-popover.open { display: grid; }
+    .emoji-item { background: none; border: none; font-size: 1.25rem; cursor: pointer; padding: 4px; border-radius: 6px; }
+    .emoji-item:hover { background: #2a250e; }
+
+    /* Secret Slash Command Autocomplete */
+    .cmd-popover {
+      display: none; position: absolute; bottom: 60px; left: 12px; right: 12px; max-width: 420px; z-index: 55;
+      background: #15171f; border: 1.5px solid #eab308; border-radius: 12px;
+      padding: 6px; flex-direction: column; gap: 3px; box-shadow: 0 12px 32px rgba(0,0,0,0.75);
+    }
+    .cmd-popover.open { display: flex; }
+    .cmd-opt {
+      padding: 7px 10px; border-radius: 8px; border: none; background: none; color: #fefce8;
+      text-align: left; cursor: pointer; font-size: 0.81rem; display: flex; justify-content: space-between; gap: 8px;
+    }
+    .cmd-opt:hover { background: #26220e; color: #facc15; }
+    .cmd-opt strong { color: #facc15; }
+
+    .input-row { display: flex; gap: 6px; align-items: center; }
+    .input-row input[type="text"] {
+      flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #eab30855;
+      background: #181a22; color: #fefce8; font-size: 0.93rem; outline: none; min-width: 0;
+    }
+    .icon-btn {
+      padding: 9px 11px; border: 1px solid #eab30855; border-radius: 10px;
+      background: #181a22; color: #facc15; font-size: 1rem; cursor: pointer; flex-shrink: 0;
+    }
+    .icon-btn:hover { background: #262934; }
+    .icon-btn.listening { background: #dc2626; border-color: #ef4444; color: #fff; animation: micPulse 1s infinite; }
+    @keyframes micPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); } }
+    .send-btn {
+      padding: 10px 16px; border: none; border-radius: 10px; background: #facc15;
+      color: #090a0d; font-weight: 900; cursor: pointer; flex-shrink: 0;
+    }
+    .send-btn:hover { background: #fde047; }
+
+    /* ================= MODALS ================= */
+    .modal-backdrop {
+      display: none; position: absolute; inset: 0; z-index: 80;
+      background: rgba(0, 0, 0, 0.74); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 14px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: 100%; max-width: 500px; max-height: 86vh; background: #14161d;
+      border: 2px solid #eab308; border-radius: 16px; display: flex; flex-direction: column;
+      overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.85);
+    }
+    .modal-head {
+      padding: 12px 16px; background: #1c190a; border-bottom: 1px solid #eab30855;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-head h2 { margin: 0; font-size: 1.02rem; color: #facc15; }
+    .modal-close {
+      background: none; border: 1px solid #eab30855; color: #facc15;
+      border-radius: 8px; padding: 3px 9px; cursor: pointer; font-weight: 800;
+    }
+    .modal-body { padding: 14px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 11px; font-size: 0.87rem; }
+
+    .mod-textarea, .mod-input {
+      width: 100%; padding: 9px 11px; border-radius: 10px;
+      border: 1px solid #eab30855; background: #0b0c10; color: #fefce8; font-size: 0.88rem;
+    }
+    .mod-textarea { min-height: 76px; resize: vertical; }
+    .mod-out {
+      padding: 11px 13px; border-radius: 10px; background: #1a170b;
+      border: 1px solid #eab30866; color: #fef08a; white-space: pre-wrap; line-height: 1.48;
+    }
+
+    /* Kand Meter Bar */
+    .kand-meter-bg { width: 100%; height: 14px; background: #090a0d; border-radius: 999px; border: 1px solid #eab30855; overflow: hidden; }
+    .kand-meter-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #22c55e, #facc15, #ef4444); transition: width 0.5s ease; }
+
+    /* Roast Battle Scoreboard */
+    .battle-board {
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px;
+      padding: 10px; border-radius: 10px; background: #0c0d11; border: 1px solid #eab30855; text-align: center;
+    }
+    .battle-score { font-size: 1.35rem; font-weight: 900; color: #facc15; }
+    .battle-log { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+
+    .setting-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 8px 10px; background: #0c0d11; border: 1px solid #eab30833; border-radius: 10px;
+    }
+    .setting-row select, .setting-row input[type="range"] {
+      background: #181a22; color: #facc15; border: 1px solid #eab30855; border-radius: 6px; padding: 5px 8px;
+    }
+    .danger-btn {
+      padding: 9px 12px; border-radius: 10px; border: 1px solid #ef4444;
+      background: #7f1d1d44; color: #fca5a5; font-weight: 700; cursor: pointer;
+    }
+    .danger-btn:hover { background: #991b1b66; }
+    .card-item {
+      padding: 9px 10px; border-radius: 10px; background: #0c0d11; border: 1px solid #eab30844;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+
+    .toast {
+      position: absolute; bottom: 72px; left: 50%; transform: translateX(-50%) translateY(12px);
+      background: #facc15; color: #090a0d; padding: 7px 16px; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 900; z-index: 95; opacity: 0; pointer-events: none;
+      transition: all 0.22s ease; box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 780px) {
+      .menu-btn { display: inline-block; }
+      .sidebar { position: absolute; top: 0; bottom: 0; left: 0; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-backdrop.open { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- ================= BLACK & YELLOW INTRO ================= -->
+    <div id="introOverlay" class="intro-overlay play">
+      <div class="intro-top-bar">
+        <label id="introInsertLabel" class="intro-pill-btn" title="Insert Intro Song (e.g. Hat Ja Tau Paache Ne)">
+          📁 <span id="introSongLabelText">Insert Intro Song</span>
+          <input type="file" id="introSongPicker" accept="audio/*" hidden />
+        </label>
+        <button id="introSoundBtn" class="intro-pill-btn">🔊 Intro Song</button>
+      </div>
+
+      <audio id="introMusic" src="hat_ja_tau.mp3" loop preload="auto"></audio>
+
+      <div class="intro-shake-wrap">
+        <svg class="village-bg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="lampGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fef08a" stop-opacity="0.95" />
+              <stop offset="45%" stop-color="#facc15" stop-opacity="0.4" />
+              <stop offset="100%" stop-color="#facc15" stop-opacity="0" />
+            </radialGradient>
+          </defs>
+          <circle cx="960" cy="125" r="52" fill="#facc15" opacity="0.18" />
+          <circle cx="960" cy="125" r="34" fill="#facc15" opacity="0.28" />
+          <g class="lamp-1"><circle cx="150" cy="95" r="34" fill="url(#lampGlow)" /><path d="M 141 84 L 159 84 L 156 105 L 144 105 Z" fill="#facc15" stroke="#92400e" stroke-width="1.5" /><ellipse cx="150" cy="105" rx="6" ry="2.2" fill="#78350f" /><circle cx="150" cy="98" r="3.2" fill="#ffffff" /></g>
+          <g class="lamp-2"><circle cx="340" cy="65" r="26" fill="url(#lampGlow)" /><path d="M 333 56 L 347 56 L 345 72 L 335 72 Z" fill="#fde047" stroke="#92400e" stroke-width="1.2" /><circle cx="340" cy="67" r="2.5" fill="#ffffff" /></g>
+          <g class="lamp-3"><circle cx="540" cy="115" r="22" fill="url(#lampGlow)" /><path d="M 534 108 L 546 108 L 544 121 L 536 121 Z" fill="#facc15" stroke="#92400e" stroke-width="1.2" /><circle cx="540" cy="116" r="2" fill="#ffffff" /></g>
+          <g class="lamp-4"><circle cx="710" cy="70" r="30" fill="url(#lampGlow)" /><path d="M 702 60 L 718 60 L 715 79 L 705 79 Z" fill="#facc15" stroke="#92400e" stroke-width="1.4" /><circle cx="710" cy="72" r="2.8" fill="#ffffff" /></g>
+          <g class="lamp-5"><circle cx="885" cy="165" r="24" fill="url(#lampGlow)" /><path d="M 879 157 L 891 157 L 889 172 L 881 172 Z" fill="#fde047" stroke="#92400e" stroke-width="1.2" /><circle cx="885" cy="166" r="2.2" fill="#ffffff" /></g>
+          <g class="lamp-6"><circle cx="1065" cy="95" r="36" fill="url(#lampGlow)" /><path d="M 1055 83 L 1075 83 L 1071 106 L 1059 106 Z" fill="#facc15" stroke="#92400e" stroke-width="1.5" /><ellipse cx="1065" cy="106" rx="6" ry="2.2" fill="#78350f" /><circle cx="1065" cy="98" r="3.4" fill="#ffffff" /></g>
+          <g class="cloud-slow" fill="#facc15" opacity="0.09"><ellipse cx="220" cy="145" rx="58" ry="22" /><ellipse cx="255" cy="137" rx="40" ry="20" /><ellipse cx="190" cy="149" rx="34" ry="15" /></g>
+          <g class="cloud-slower" fill="#facc15" opacity="0.07"><ellipse cx="780" cy="122" rx="50" ry="18" /><ellipse cx="812" cy="116" rx="32" ry="16" /></g>
+          <path d="M 0 380 Q 320 335 640 375 T 1200 360 L 1200 700 L 0 700 Z" fill="#181a20" />
+          <path d="M 0 420 Q 400 390 820 422 T 1200 402 L 1200 700 L 0 700 Z" fill="#13151a" />
+          <g transform="translate(75, 255)" opacity="0.9"><rect x="0" y="128" width="210" height="20" rx="4" fill="#2a2410" /><rect x="24" y="54" width="10" height="74" fill="#eab308" opacity="0.45" /><rect x="100" y="54" width="10" height="74" fill="#eab308" opacity="0.45" /><rect x="176" y="54" width="10" height="74" fill="#eab308" opacity="0.45" /><polygon points="-12,56 105,12 222,56" fill="#211c0c" stroke="#eab308" stroke-width="1.5" stroke-opacity="0.45" /></g>
+          <g class="crop-sway-1">
+            <g stroke="#854d0e" stroke-width="3.5" stroke-linecap="round"><line x1="65" y1="450" x2="60" y2="345" /><line x1="115" y1="450" x2="120" y2="355" /><line x1="170" y1="450" x2="165" y2="362" /><line x1="1030" y1="450" x2="1035" y2="355" /><line x1="1090" y1="450" x2="1085" y2="345" /><line x1="1140" y1="450" x2="1145" y2="360" /></g>
+            <g fill="#facc15" opacity="0.85"><circle cx="60" cy="342" r="8" /><circle cx="120" cy="352" r="8" /><circle cx="165" cy="360" r="7" /><circle cx="1035" cy="352" r="8" /><circle cx="1085" cy="342" r="8" /><circle cx="1145" cy="358" r="7" /></g>
+          </g>
+        </svg>
+
+        <div class="wooden-floor"></div>
+
+        <div class="intro-center">
+          <div class="intro-char-wrap">
+            <svg viewBox="0 0 360 240" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+              <g id="introCharpai">
+                <ellipse cx="272" cy="223" rx="68" ry="6" fill="#000000" opacity="0.48" />
+                <rect x="218" y="184" width="8" height="30" rx="2" fill="#451a03" /><rect x="318" y="184" width="8" height="30" rx="2" fill="#451a03" />
+                <polygon points="214,174 330,174 344,191 198,191" fill="#1c1917" stroke="#92400e" stroke-width="3" stroke-linejoin="round" />
+                <g stroke="#eab308" stroke-width="1.6" opacity="0.9"><line x1="212" y1="176" x2="226" y2="190" /><line x1="228" y1="176" x2="242" y2="190" /><line x1="244" y1="176" x2="258" y2="190" /><line x1="260" y1="176" x2="274" y2="190" /><line x1="276" y1="176" x2="290" y2="190" /><line x1="292" y1="176" x2="306" y2="190" /><line x1="308" y1="176" x2="322" y2="190" /></g>
+                <g stroke="#fef08a" stroke-width="1.4" opacity="0.85"><line x1="226" y1="176" x2="206" y2="190" /><line x1="242" y1="176" x2="222" y2="190" /><line x1="258" y1="176" x2="238" y2="190" /><line x1="274" y1="176" x2="254" y2="190" /><line x1="290" y1="176" x2="270" y2="190" /><line x1="306" y1="176" x2="286" y2="190" /><line x1="322" y1="176" x2="302" y2="190" /></g>
+                <rect x="302" y="164" width="30" height="14" rx="6" fill="#dc2626" stroke="#facc15" stroke-width="1.5" />
+                <line x1="312" y1="165" x2="312" y2="177" stroke="#facc15" stroke-width="1.4" /><line x1="322" y1="165" x2="322" y2="177" stroke="#facc15" stroke-width="1.4" />
+                <rect x="197" y="189" width="148" height="8" rx="3" fill="#92400e" stroke="#451a03" stroke-width="1.5" />
+                <rect x="204" y="195" width="10" height="28" rx="3" fill="#78350f" stroke="#451a03" stroke-width="1.3" /><rect x="204" y="206" width="10" height="3" fill="#facc15" />
+                <rect x="330" y="195" width="10" height="28" rx="3" fill="#78350f" stroke="#451a03" stroke-width="1.3" /><rect x="330" y="206" width="10" height="3" fill="#facc15" />
+              </g>
+
+              <g transform="translate(-8, 0)">
+                <ellipse cx="120" cy="222" rx="58" ry="7" fill="#000000" opacity="0.48" />
+                <g class="dust-puff"><ellipse cx="54" cy="221" rx="20" ry="6" fill="none" stroke="#facc15" stroke-width="2.5" /><circle cx="38" cy="215" r="4" fill="#fef08a" opacity="0.8" /><circle cx="70" cy="215" r="4" fill="#fef08a" opacity="0.8" /></g>
+                <rect x="98" y="172" width="18" height="42" rx="7" fill="#fefce8" stroke="#eab308" stroke-width="1.5" /><rect x="124" y="172" width="18" height="42" rx="7" fill="#fefce8" stroke="#eab308" stroke-width="1.5" />
+                <path d="M 92 214 Q 95 207 116 212 L 116 220 L 92 220 Z" fill="#18181b" stroke="#eab308" stroke-width="1" /><path d="M 148 214 Q 145 207 124 212 L 124 220 L 148 220 Z" fill="#18181b" stroke="#eab308" stroke-width="1" />
+                <path d="M 88 124 Q 120 116 152 124 L 156 178 Q 120 183 84 178 Z" fill="#fefce8" stroke="#eab308" stroke-width="2" />
+                <path d="M 108 122 L 120 137 L 132 122" fill="none" stroke="#eab308" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+
+                <g class="danda-arm-group">
+                  <rect x="50" y="68" width="8" height="152" rx="4" fill="#92400e" stroke="#451a03" stroke-width="1.5" /><rect x="50" y="68" width="8" height="7" rx="3" fill="#facc15" />
+                  <line x1="50" y1="104" x2="58" y2="104" stroke="#451a03" stroke-width="2" /><line x1="50" y1="142" x2="58" y2="142" stroke="#451a03" stroke-width="2" /><line x1="50" y1="182" x2="58" y2="182" stroke="#451a03" stroke-width="2" />
+                  <path d="M 90 128 Q 72 138 56 146" fill="none" stroke="#eab308" stroke-width="16" stroke-linecap="round" /><path d="M 90 128 Q 72 138 56 146" fill="none" stroke="#fefce8" stroke-width="12" stroke-linecap="round" />
+                  <circle cx="54" cy="146" r="7.5" fill="#ecc194" stroke="#c89260" stroke-width="1.5" />
+                </g>
+
+                <g class="stache-arm-group">
+                  <path d="M 150 128 Q 173 135 153 98" fill="none" stroke="#eab308" stroke-width="15" stroke-linecap="round" /><path d="M 150 128 Q 173 135 153 98" fill="none" stroke="#fefce8" stroke-width="11" stroke-linecap="round" />
+                  <circle cx="152" cy="96" r="6.5" fill="#ecc194" stroke="#c89260" stroke-width="1.2" /><path d="M 146 95 Q 143 91 147 89" fill="none" stroke="#c89260" stroke-width="2.5" stroke-linecap="round" />
+                </g>
+
+                <rect x="110" y="109" width="20" height="14" rx="6" fill="#dfb082" />
+                <g>
+                  <path d="M 98 121 Q 120 134 142 121 L 146 129 Q 120 144 94 129 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.2" />
+                  <path d="M 96 125 L 114 129 L 112 178 L 93 176 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.2" />
+                  <line x1="95" y1="140" x2="113" y2="142" stroke="#facc15" stroke-width="2.2" /><line x1="94" y1="154" x2="112" y2="156" stroke="#fefce8" stroke-width="2" />
+                  <line x1="94" y1="168" x2="112" y2="170" stroke="#facc15" stroke-width="2.5" /><line x1="103" y1="127" x2="101" y2="177" stroke="#facc15" stroke-width="1.6" stroke-dasharray="4 4" />
+                  <path d="M 95 176 L 94 182 M 100 177 L 99 183 M 105 177 L 105 183 M 110 178 L 110 183" stroke="#fef08a" stroke-width="1.8" stroke-linecap="round" />
+                </g>
+
+                <path d="M 155 64 L 164 89 L 154 91 L 149 70 Z" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.2" />
+                <circle cx="87" cy="86" r="7" fill="#dfb082" /><circle cx="153" cy="86" r="7" fill="#dfb082" />
+                <ellipse cx="120" cy="84" rx="32" ry="30" fill="#ecc194" />
+                <ellipse cx="98" cy="93" rx="5.5" ry="3.2" fill="#e08e6d" opacity="0.45" /><ellipse cx="142" cy="93" rx="5.5" ry="3.2" fill="#e08e6d" opacity="0.45" />
+                <path d="M 117 88 Q 120 91 123 88" fill="none" stroke="#c89260" stroke-width="2.2" stroke-linecap="round" />
+                <path d="M 112 104 Q 120 109 128 104" fill="none" stroke="#6e4425" stroke-width="2.3" stroke-linecap="round" />
+
+                <!-- ONLY TWO-PART Moustache -->
+                <g fill="#1f1610">
+                  <path class="intro-stache-left" d="M 118 95 C 112 91, 99 92, 91 98 C 88 101, 91 104, 96 102 C 104 99, 112 99, 118 98 Z" />
+                  <path class="intro-stache-right" d="M 122 95 C 128 91, 141 92, 149 98 C 152 101, 149 104, 144 102 C 136 99, 128 99, 122 98 Z" />
+                </g>
+
+                <g>
+                  <rect x="88" y="76" width="8" height="3.5" fill="#09090b" /><rect x="144" y="76" width="8" height="3.5" fill="#09090b" />
+                  <rect x="95" y="74" width="21" height="4.5" fill="#09090b" /><rect x="97" y="78.5" width="17" height="4.5" fill="#09090b" />
+                  <rect x="99" y="83" width="13" height="3.5" fill="#09090b" /><rect x="116" y="76" width="8" height="3.5" fill="#09090b" />
+                  <rect x="124" y="74" width="21" height="4.5" fill="#09090b" /><rect x="126" y="78.5" width="17" height="4.5" fill="#09090b" />
+                  <rect x="128" y="83" width="13" height="3.5" fill="#09090b" />
+                  <rect x="99" y="76.5" width="2.5" height="2.5" fill="#ffffff" /><rect x="101.5" y="79" width="2.5" height="2.5" fill="#ffffff" />
+                  <rect x="128" y="76.5" width="2.5" height="2.5" fill="#ffffff" /><rect x="130.5" y="79" width="2.5" height="2.5" fill="#ffffff" />
+                </g>
+
+                <g>
+                  <path d="M 102 42 Q 112 18 128 24 Q 124 38 118 44 Z" fill="#ef4444" stroke="#991b1b" stroke-width="1.4" />
+                  <line x1="112" y1="26" x2="110" y2="41" stroke="#991b1b" stroke-width="1.2" /><line x1="119" y1="26" x2="114" y2="41" stroke="#991b1b" stroke-width="1.2" />
+                  <path d="M 82 62 C 78 32, 162 32, 158 62 Q 120 52 82 62 Z" fill="#991b1b" />
+                  <path d="M 78 65 C 76 42, 114 32, 148 50 C 132 58, 100 66, 80 70 Z" fill="#b91c1c" stroke="#7f1d1d" stroke-width="1.2" />
+                  <path d="M 162 65 C 164 42, 126 32, 92 50 C 108 58, 140 66, 160 70 Z" fill="#dc2626" stroke="#7f1d1d" stroke-width="1.2" />
+                  <path d="M 77 68 C 74 52, 96 46, 120 62 C 104 71, 86 74, 77 68 Z" fill="#ef4444" stroke="#991b1b" stroke-width="1.3" />
+                  <path d="M 163 68 C 166 52, 144 46, 120 62 C 136 71, 154 74, 163 68 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.3" />
+                  <circle cx="120" cy="58" r="3" fill="#facc15" stroke="#7f1d1d" stroke-width="1" />
+                </g>
+              </g>
+            </svg>
+          </div>
+          <h1 class="intro-tau-title">Tau</h1>
+          <button id="enterBtn" class="enter-btn">Ram Ram — Enter Chat</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SIDEBAR ================= -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+    <aside id="sidebar" class="sidebar">
+      <div class="side-top">
+        <button id="newChatBtn" class="new-chat-btn">➕ New Chat</button>
+      </div>
+
+      <div class="side-scroll">
+        <div>
+          <div class="section-head"><span>🎭 Personality Modes</span></div>
+          <div id="modeGrid" class="mode-grid"></div>
+        </div>
+
+        <div>
+          <div class="section-head"><span>🔥 Tau Unique Modules</span></div>
+          <div class="tools-grid">
+            <button type="button" id="btnPanchayat" class="tool-btn">⚖️ Panchayat</button>
+            <button type="button" id="btnKand" class="tool-btn">🚨 Kand Detector</button>
+            <button type="button" id="btnSavage" class="tool-btn">💬 Savage Reply</button>
+            <button type="button" id="btnBattle" class="tool-btn">🥊 Roast Battle</button>
+            <button type="button" id="btnTranslator" class="tool-btn">🌐 Translator</button>
+            <button type="button" id="btnDailyKand" class="tool-btn">📰 Daily Kand</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-head"><span>⚡ Quick Fun</span></div>
+          <div class="tools-grid">
+            <button type="button" id="btnRandJoke" class="tool-btn">😂 Joke</button>
+            <button type="button" id="btnRandRoast" class="tool-btn">🔥 Random Roast</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-head"><span>🕘 Chat History</span></div>
+          <div id="historyList" class="hist-list"></div>
+        </div>
+      </div>
+
+      <div class="side-footer">
+        <button type="button" id="btnMemory" class="foot-btn">🧠 Mem (<span id="memCount">0</span>)</button>
+        <button type="button" id="btnFavs" class="foot-btn">⭐ (<span id="favCount">0</span>)</button>
+        <button type="button" id="btnSettings" class="foot-btn">⚙️ Setup</button>
+        <button type="button" id="btnHelp" class="foot-btn">❓ Help</button>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN CHAT AREA ================= -->
+    <div class="main">
+      <div class="tau-stage">
+        <button id="menuBtn" class="menu-btn" title="Menu">☰</button>
+        <div class="tau-avatar-box">
+          <div class="tau-avatar-wrap" id="tauAvatar" title="Click for Thug Life Drop!">
+            <svg class="tau-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 52 186 C 54 146, 146 146, 148 186 Z" fill="#fefce8" stroke="#eab308" stroke-width="2" />
+              <path d="M 86 148 L 100 164 L 114 148" fill="none" stroke="#eab308" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+              <rect x="89" y="135" width="22" height="16" rx="7" fill="#dfb082" />
+              <g>
+                <path d="M 74 147 Q 100 163 126 147 L 131 157 Q 100 174 69 157 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.3" />
+                <path d="M 71 153 L 92 160 L 89 190 L 66 190 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.3" />
+                <line x1="69" y1="168" x2="91" y2="171" stroke="#facc15" stroke-width="2.6" />
+                <line x1="68" y1="180" x2="90" y2="183" stroke="#fefce8" stroke-width="2.2" />
+                <line x1="81" y1="156" x2="78" y2="190" stroke="#facc15" stroke-width="1.8" stroke-dasharray="4 4" />
+              </g>
+              <g class="tau-head-group">
+                <path d="M 140 82 L 150 110 L 139 112 L 134 89 Z" fill="#991b1b" stroke="#7f1d1d" stroke-width="1.3" />
+                <circle cx="62" cy="108" r="8" fill="#dfb082" /><circle cx="138" cy="108" r="8" fill="#dfb082" />
+                <ellipse cx="100" cy="106" rx="37" ry="35" fill="#ecc194" />
+                <ellipse cx="75" cy="116" rx="6.5" ry="3.8" fill="#e08e6d" opacity="0.45" /><ellipse cx="125" cy="116" rx="6.5" ry="3.8" fill="#e08e6d" opacity="0.45" />
+                <path d="M 97 110 Q 100 114 103 110" fill="none" stroke="#c89260" stroke-width="2.4" stroke-linecap="round" />
+
+                <!-- Shocked Eyes (revealed when glasses drop) -->
+                <g class="eyes-shock">
+                  <circle cx="83" cy="96" r="6" fill="#ffffff" stroke="#1f1610" stroke-width="1.5" />
+                  <circle cx="83" cy="96" r="2.5" fill="#1f1610" />
+                  <circle cx="117" cy="96" r="6" fill="#ffffff" stroke="#1f1610" stroke-width="1.5" />
+                  <circle cx="117" cy="96" r="2.5" fill="#1f1610" />
+                </g>
+
+                <!-- Mouth Reactions -->
+                <path class="mouth-normal" d="M 91 129 Q 100 135 109 129" fill="none" stroke="#6e4425" stroke-width="2.6" stroke-linecap="round" />
+                <path class="mouth-laugh" d="M 88 126 Q 100 142 112 126 Z" fill="#7f1d1d" stroke="#450a0a" stroke-width="2" />
+                <ellipse class="mouth-shock" cx="100" cy="131" rx="6" ry="7.5" fill="#450a0a" stroke="#6e4425" stroke-width="2" />
+
+                <!-- ONLY TWO-PART Moustache -->
+                <g fill="#1f1610">
+                  <path class="head-stache-left" d="M 98 119 C 91 115, 76 116, 67 123 C 63 126, 66 130, 72 128 C 81 125, 91 124, 98 123 Z" />
+                  <path class="head-stache-right" d="M 102 119 C 109 115, 124 116, 133 123 C 137 126, 134 130, 128 128 C 119 125, 109 124, 102 123 Z" />
+                </g>
+
+                <g class="thug-glasses">
+                  <rect x="63" y="96" width="9" height="4" fill="#09090b" /><rect x="128" y="96" width="9" height="4" fill="#09090b" />
+                  <rect x="71" y="93" width="25" height="5" fill="#09090b" /><rect x="73" y="98" width="21" height="5" fill="#09090b" />
+                  <rect x="76" y="103" width="15" height="4" fill="#09090b" /><rect x="96" y="96" width="8" height="4" fill="#09090b" />
+                  <rect x="104" y="93" width="25" height="5" fill="#09090b" /><rect x="106" y="98" width="21" height="5" fill="#09090b" />
+                  <rect x="109" y="103" width="15" height="4" fill="#09090b" />
+                  <rect x="75" y="96" width="3" height="3" fill="#ffffff" /><rect x="78" y="99" width="3" height="3" fill="#ffffff" />
+                  <rect x="108" y="96" width="3" height="3" fill="#ffffff" /><rect x="111" y="99" width="3" height="3" fill="#ffffff" />
+                </g>
+
+                <!-- Angry Brows -->
+                <g class="brows-angry" stroke="#1f1610" stroke-width="3.6" stroke-linecap="round">
+                  <line x1="72" y1="88" x2="93" y2="94" />
+                  <line x1="128" y1="88" x2="107" y2="94" />
+                </g>
+
+                <g>
+                  <path d="M 80 56 Q 91 28 109 35 Q 105 51 98 58 Z" fill="#ef4444" stroke="#991b1b" stroke-width="1.5" />
+                  <line x1="91" y1="37" x2="89" y2="54" stroke="#991b1b" stroke-width="1.3" /><line x1="99" y1="37" x2="94" y2="54" stroke="#991b1b" stroke-width="1.3" />
+                  <path d="M 56 80 C 52 45, 148 45, 144 80 Q 100 68 56 80 Z" fill="#991b1b" />
+                  <path d="M 52 84 C 50 57, 93 45, 132 66 C 114 75, 77 84, 54 89 Z" fill="#b91c1c" stroke="#7f1d1d" stroke-width="1.3" />
+                  <path d="M 148 84 C 150 57, 107 45, 68 66 C 86 75, 123 84, 146 89 Z" fill="#dc2626" stroke="#7f1d1d" stroke-width="1.3" />
+                  <path d="M 50 87 C 47 68, 72 62, 100 80 C 82 90, 61 93, 50 87 Z" fill="#ef4444" stroke="#991b1b" stroke-width="1.4" />
+                  <path d="M 150 87 C 153 68, 128 62, 100 80 C 118 90, 139 93, 150 87 Z" fill="#dc2626" stroke="#991b1b" stroke-width="1.4" />
+                  <circle cx="100" cy="76" r="3.5" fill="#facc15" stroke="#7f1d1d" stroke-width="1.2" />
+                </g>
+              </g>
+            </svg>
+          </div>
+          <span class="rxn-badge" id="rxnBadge">😎</span>
+        </div>
+
+        <div class="tau-meta">
+          <div class="tau-title-row">
+            <h1>Tau</h1>
+            <span class="swag-pill" id="activeModePill">😎 Attitude</span>
+            <span class="mood-pill" id="moodPill" title="Click to cycle mood">Mood: 😊 Chill</span>
+          </div>
+          <p class="tau-status" id="tauStatus">😎 Full swag mein baitha se Tau — puchh ke puchhna!</p>
+        </div>
+
+        <div>
+          <button type="button" id="clearChatBtn" class="btn-sm" title="Clear Current Chat">🧹 Clear</button>
+        </div>
+      </div>
+
+      <div class="music-bar">
+        <div class="song-info">
+          <span id="eqIcon">🎵</span>
+          <span id="trackName">Desi Inside Chill Beat</span>
+        </div>
+        <div class="music-controls">
+          <button type="button" class="btn-sm play" id="playBtn">▶ Play</button>
+          <input type="range" id="volSlider" class="vol-slider" min="0" max="1" step="0.05" value="0.35" />
+          <label class="btn-sm" title="Insert Inside Chat Song (e.g. 2_khatole.mp3)">
+            📁 Chat Song
+            <input type="file" id="chatSongPicker" accept="audio/*" hidden />
+          </label>
+          <button type="button" class="btn-sm" id="replayIntroBtn">🎬 Intro</button>
+        </div>
+        <audio id="chatMusic" src="2_khatole.mp3" loop preload="auto"></audio>
+      </div>
+
+      <div class="config">
+        <input id="apiKey" type="password" placeholder="Optional: Paste NEW OpenAI API key for Live Mode (supports images & all modules)" />
+        <span id="modeBadge" class="badge">Demo Mode</span>
+      </div>
+
+      <!-- Daily Kand Bar -->
+      <div class="daily-kand-bar">
+        <span id="dailyKandText">📰 <strong>Daily Kand:</strong> Loading...</span>
+        <button type="button" id="nextDailyKandBtn" class="btn-sm" title="Next Kand">🎲 Next</button>
+      </div>
+
+      <div id="chat" class="chat"></div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <div id="attachPreview" class="attach-preview">
+          <img id="attachImg" src="" alt="Preview" />
+          <span id="attachName">image.png</span>
+          <button type="button" id="removeAttachBtn" class="del-btn" title="Remove Image">✕</button>
+        </div>
+
+        <div id="emojiPopover" class="emoji-popover"></div>
+        <div id="cmdPopover" class="cmd-popover"></div>
+
+        <form id="form" class="input-row">
+          <label class="icon-btn" title="Upload Image">🖼️<input type="file" id="imgPicker" accept="image/*" hidden /></label>
+          <button type="button" id="emojiBtn" class="icon-btn" title="Emojis">😄</button>
+          <input id="prompt" type="text" placeholder="Type message or '/' for secret commands (/roast, /panchayat, /kand)..." autocomplete="off" />
+          <button type="button" id="micBtn" class="icon-btn" title="Voice Input">🎙️</button>
+          <button type="submit" class="send-btn">Bhej</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= MODULE MODALS ================= -->
+    <!-- 1. Tau Ki Panchayat Modal -->
+    <div id="panchayatModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>⚖️ Tau Ki Panchayat</h2>
+          <button class="modal-close" data-close="panchayatModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="margin:0;color:#fef08a;">Apni dosti, pyaar, office ya ghar ka koi bhi jhagda / situation batao—Sarpanch Tau abhi faisla sunayega!</p>
+          <textarea id="panchayatInput" class="mod-textarea" placeholder="e.g., Mere dost ne mera bike udhaar le jaake petrol khatam kar diya aur ab phone nahi utha raha..."></textarea>
+          <button type="button" id="runPanchayatBtn" class="send-btn">⚖️ Sunao Faisla!</button>
+          <div id="panchayatOut" class="mod-out" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Kand Detector Modal -->
+    <div id="kandModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>🚨 Kand Detector (1–10)</h2>
+          <button class="modal-close" data-close="kandModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="margin:0;color:#fef08a;">Jo bhi kand kiya hai sach-sach likh de—Tau meter lagake batayega kitna bada kand hai!</p>
+          <textarea id="kandInput" class="mod-textarea" placeholder="e.g., Maine galti se boss wale WhatsApp group mein unhi ka meme bhej diya..."></textarea>
+          <button type="button" id="runKandBtn" class="send-btn">🚨 Scan Kand Level</button>
+          <div id="kandResultWrap" style="display:none; flex-direction:column; gap:8px;">
+            <div style="display:flex;justify-content:space-between;font-weight:800;color:#facc15;">
+              <span id="kandScoreText">Kand Score: 0/10</span>
+              <span id="kandTierText">Level</span>
+            </div>
+            <div class="kand-meter-bg"><div id="kandMeterFill" class="kand-meter-fill"></div></div>
+            <div id="kandOut" class="mod-out"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Savage Reply Generator Modal -->
+    <div id="savageModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>💬 Savage Reply Generator</h2>
+          <button class="modal-close" data-close="savageModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <textarea id="savageInput" class="mod-textarea" placeholder="Wo message paste kar jispe reply dena hai (e.g., 'Bhai 500 udhaar de de next week pakka wapas kar dunga')"></textarea>
+          <div class="setting-row">
+            <span>🎯 Reply Tone</span>
+            <select id="savageTone">
+              <option value="savage">🔥 Savage</option>
+              <option value="funny">😂 Funny</option>
+              <option value="witty">😎 Witty / Swag</option>
+              <option value="polite">🙏 Polite (Sanskari)</option>
+            </select>
+          </div>
+          <button type="button" id="runSavageBtn" class="send-btn">⚡ Generate Replies</button>
+          <div id="savageOut" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Roast Battle Arena Modal -->
+    <div id="battleModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>🥊 Roast Battle: You vs Tau</h2>
+          <button class="modal-close" data-close="battleModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="battle-board">
+            <div><div style="font-size:0.75rem;color:#9ca3af;">YOU</div><div id="userBattleScore" class="battle-score">0</div></div>
+            <div style="font-weight:800;color:#fef08a;" id="battleRoundText">Round 1 / 3</div>
+            <div><div style="font-size:0.75rem;color:#9ca3af;">TAU</div><div id="tauBattleScore" class="battle-score">0</div></div>
+          </div>
+          <div id="battleLog" class="battle-log">
+            <div class="mod-out">🥊 Maidan mein aa ja laadle! Pehla roast maar Tau pe, dekh kis mein kitna dum se!</div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <input id="battleInput" class="mod-input" type="text" placeholder="Apna roast likh bhai..." />
+            <button type="button" id="sendBattleBtn" class="send-btn">🔥 Hit!</button>
+          </div>
+          <button type="button" id="resetBattleBtn" class="btn-sm">🔄 Restart Battle</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Haryanvi Translator Modal (with Slang Intensity) -->
+    <div id="transModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>🌐 Haryanvi Translator</h2>
+          <button class="modal-close" data-close="transModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <textarea id="transInput" class="mod-textarea" placeholder="Enter English or Hindi sentence (e.g., How are you brother? I am very tired today.)"></textarea>
+          <div class="setting-row">
+            <span>🌶️ Slang Intensity</span>
+            <select id="transIntensity">
+              <option value="mild">🟢 Mild (Light Haryanvi)</option>
+              <option value="medium" selected>🟡 Medium (Desi Rohtak)</option>
+              <option value="hardcore">🔴 Full Desi (Hardcore Tau)</option>
+            </select>
+          </div>
+          <button type="button" id="doTranslateBtn" class="send-btn">Translate to Haryanvi</button>
+          <div id="transOutput" class="mod-out">Haryanvi translation yahan aayegi...</div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" id="copyTransBtn" class="btn-sm">📋 Copy</button>
+            <button type="button" id="sendTransChatBtn" class="btn-sm play">💬 Send to Chat</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Daily Kand Modal -->
+    <div id="dailyKandModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>📰 Daily Kand</h2>
+          <button class="modal-close" data-close="dailyKandModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <div id="dailyKandCard" class="mod-out"></div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" id="modalNextKandBtn" class="send-btn" style="flex:1;">🎲 Next Kand</button>
+            <button type="button" id="sendDailyKandChatBtn" class="btn-sm">💬 Discuss with Tau</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. Memory Mode Manager Modal -->
+    <div id="memoryModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>🧠 Tau Memory Mode</h2>
+          <button class="modal-close" data-close="memoryModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-row">
+            <span>🧠 Enable Memory Mode</span>
+            <input type="checkbox" id="memEnabledToggle" checked />
+          </div>
+          <div style="display:flex;gap:6px;">
+            <input id="memAddInput" class="mod-input" type="text" placeholder="Add fact (e.g., Mera naam Aman hai, main Rohtak se hu)" />
+            <button type="button" id="memAddBtn" class="send-btn">Save</button>
+          </div>
+          <div id="memoryList" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Replies Modal -->
+    <div id="favsModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>⭐ Saved Replies / Favourites</h2>
+          <button class="modal-close" data-close="favsModal">✕</button>
+        </div>
+        <div id="favsBody" class="modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>⚙️ Settings</h2>
+          <button class="modal-close" data-close="settingsModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-row">
+            <span>🗣️ Language Selection</span>
+            <select id="setLang">
+              <option value="Haryanvi">Haryanvi (Desi)</option>
+              <option value="Hindi">Hindi</option>
+              <option value="English">English</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <span>🔊 Voice Replies (Read Aloud)</span>
+            <input type="checkbox" id="setVoiceReply" />
+          </div>
+          <div class="setting-row">
+            <span>🔔 Sound Effects (SFX)</span>
+            <input type="checkbox" id="setSfx" checked />
+          </div>
+          <div class="setting-row">
+            <span>🔠 Font Size (<span id="fontSizeVal">14.5px</span>)</span>
+            <input type="range" id="setFontSize" min="12" max="20" step="0.5" value="14.5" />
+          </div>
+          <button type="button" id="clearAllHistBtn" class="danger-btn">🗑️ Clear All Chat History</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help & Secret Commands Modal -->
+    <div id="helpModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h2>❓ Help & Secret Commands</h2>
+          <button class="modal-close" data-close="helpModal">✕</button>
+        </div>
+        <div class="modal-body" style="line-height:1.55;">
+          <p><strong>Secret Slash Commands (Type in chat):</strong><br>
+          • <code>/panchayat [story]</code> — Tau Ki Panchayat verdict<br>
+          • <code>/kand [story]</code> — Kand Detector (1–10 score)<br>
+          • <code>/savage [msg]</code> — Savage / funny reply ideas<br>
+          • <code>/roast [name/topic]</code> — Funny Haryanvi roast<br>
+          • <code>/joke</code> — Random Haryanvi joke<br>
+          • <code>/gyaan [topic]</code> — Desi educational gyaan<br>
+          • <code>/translate [text]</code> — Haryanvi translation<br>
+          • <code>/memory</code> — View Tau's saved memories</p>
+          <p style="color:#facc15;"><strong>Note:</strong> Offline Demo Mode works completely without an API key. Paste your OpenAI API key for full Live AI responses across every module & image upload!</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">Copied!</div>
+  </div>
+
+  <script>
+    // ================= TOAST & MODALS =================
+    const toastEl = document.getElementById("toast");
+    let toastTimer = null;
+    function showToast(msg) {
+      toastEl.textContent = msg; toastEl.classList.add("show");
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2000);
+    }
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+    document.querySelectorAll(".modal-close").forEach(b => b.addEventListener("click", () => closeModal(b.dataset.close)));
+    document.querySelectorAll(".modal-backdrop").forEach(bd => bd.addEventListener("click", e => { if (e.target === bd) bd.classList.remove("open"); }));
+
+    // ================= SETTINGS =================
+    const DEFAULT_SETTINGS = { language: "Haryanvi", voiceReply: false, sfx: true, fontSize: 14.5 };
+    let settings = JSON.parse(localStorage.getItem("taugpt_settings_v1") || "null") || { ...DEFAULT_SETTINGS };
+    const setLangEl = document.getElementById("setLang"), setVoiceReplyEl = document.getElementById("setVoiceReply"), setSfxEl = document.getElementById("setSfx"), setFontSizeEl = document.getElementById("setFontSize"), fontSizeValEl = document.getElementById("fontSizeVal");
+    function applySettings() {
+      setLangEl.value = settings.language; setVoiceReplyEl.checked = settings.voiceReply;
+      setSfxEl.checked = settings.sfx; setFontSizeEl.value = settings.fontSize;
+      fontSizeValEl.textContent = settings.fontSize + "px";
+      document.documentElement.style.setProperty("--chat-font", settings.fontSize + "px");
+      localStorage.setItem("taugpt_settings_v1", JSON.stringify(settings));
+    }
+    setLangEl.addEventListener("change", () => { settings.language = setLangEl.value; applySettings(); showToast("Language: " + settings.language); });
+    setVoiceReplyEl.addEventListener("change", () => { settings.voiceReply = setVoiceReplyEl.checked; applySettings(); if (!settings.voiceReply && window.speechSynthesis) speechSynthesis.cancel(); });
+    setSfxEl.addEventListener("change", () => { settings.sfx = setSfxEl.checked; applySettings(); });
+    setFontSizeEl.addEventListener("input", () => { settings.fontSize = parseFloat(setFontSizeEl.value); applySettings(); });
+    applySettings();
+
+    // ================= CHARACTER REACTIONS & AVATAR =================
+    const tauAvatar = document.getElementById("tauAvatar");
+    const rxnBadge = document.getElementById("rxnBadge");
+    const tauStatus = document.getElementById("tauStatus");
+    const EXPR_CLASSES = ["expr-laugh", "expr-shock", "expr-angry", "expr-think", "expr-flirt"];
+
+    function setTauExpression(expr, emoji, statusLine = null, duration = 4500) {
+      tauAvatar.classList.remove(...EXPR_CLASSES);
+      if (expr && expr !== "swag") tauAvatar.classList.add("expr-" + expr);
+      rxnBadge.textContent = emoji || "😎";
+      if (statusLine) tauStatus.textContent = statusLine;
+      if (duration > 0) {
+        setTimeout(() => {
+          tauAvatar.classList.remove(...EXPR_CLASSES);
+          rxnBadge.textContent = "😎";
+          tauStatus.textContent = chatPlaying ? "🕺 Tau inside song pe full vibe kar raha se!" : "😎 Full swag mein baitha se Tau — puchh ke puchhna!";
+        }, duration);
+      }
+    }
+    function triggerThugDrop() {
+      tauAvatar.classList.remove("thug-drop"); void tauAvatar.offsetWidth; tauAvatar.classList.add("thug-drop");
+    }
+    function triggerTalking(ms = 1800) {
+      tauAvatar.classList.add("talking");
+      setTimeout(() => tauAvatar.classList.remove("talking"), ms);
+    }
+    tauAvatar.addEventListener("click", () => { triggerThugDrop(); setTauExpression("laugh", "😂", "😂 Tau full moj mein se!", 2000); triggerTalking(900); });
+
+    // ================= INTRO + DUAL SONG ENGINE =================
+    const introOverlay = document.getElementById("introOverlay"), introSoundBtn = document.getElementById("introSoundBtn"), introInsertLabel = document.getElementById("introInsertLabel"), introSongLabelText = document.getElementById("introSongLabelText"), introSongPicker = document.getElementById("introSongPicker"), enterBtn = document.getElementById("enterBtn"), replayIntroBtn = document.getElementById("replayIntroBtn");
+    const introMusic = document.getElementById("introMusic"), chatMusic = document.getElementById("chatMusic"), playBtn = document.getElementById("playBtn"), volSlider = document.getElementById("volSlider"), chatSongPicker = document.getElementById("chatSongPicker"), trackName = document.getElementById("trackName"), eqIcon = document.getElementById("eqIcon");
+
+    let volume = 0.35; introMusic.volume = volume; chatMusic.volume = volume;
+    let currentScreen = "intro", introMp3Available = false, chatMp3Available = false, introPlaying = false, chatPlaying = false;
+
+    function openSongDB() {
+      return new Promise((res, rej) => {
+        if (!window.indexedDB) return rej();
+        const r = indexedDB.open("taugpt_media_db", 1);
+        r.onupgradeneeded = () => r.result.createObjectStore("songs");
+        r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+      });
+    }
+    async function saveSongToDB(k, name, blob) { try { const db = await openSongDB(); db.transaction("songs", "readwrite").objectStore("songs").put({ name, blob }, k); } catch {} }
+    async function loadSongFromDB(k) { try { const db = await openSongDB(); return await new Promise(res => { const rq = db.transaction("songs", "readonly").objectStore("songs").get(k); rq.onsuccess = () => res(rq.result || null); rq.onerror = () => res(null); }); } catch { return null; } }
+
+    introMusic.addEventListener("canplaythrough", () => { introMp3Available = true; if (introMusic.getAttribute("src") === "hat_ja_tau.mp3") introSongLabelText.textContent = "Intro: Hat Ja Tau"; });
+    introMusic.addEventListener("error", () => { introMp3Available = false; });
+    chatMusic.addEventListener("canplaythrough", () => { chatMp3Available = true; if (chatMusic.getAttribute("src") === "2_khatole.mp3") trackName.textContent = "2 Khatole — Masoom Sharma"; });
+    chatMusic.addEventListener("error", () => { chatMp3Available = false; trackName.textContent = "Desi Inside Chill Beat"; });
+
+    let audioCtx = null, masterGain = null, beatTimer = null, step = 0;
+    const introMelody = [293.66, 0, 349.23, 392, 440, 0, 392, 349.23, 293.66, 349.23, 392, 0, 329.63, 293.66, 261.63, 293.66, 293.66, 0, 440, 466.16, 440, 392, 349.23, 392, 349.23, 329.63, 293.66, 0, 261.63, 293.66, 349.23, 293.66];
+    const introBass   = [73.42, 0, 0, 73.42, 87.31, 0, 98, 0, 73.42, 0, 0, 73.42, 65.41, 0, 73.42, 0, 73.42, 0, 0, 73.42, 87.31, 0, 98, 0, 87.31, 0, 73.42, 0, 65.41, 0, 73.42, 0];
+    const chatMelody  = [440, 0, 0, 392, 329.63, 0, 392, 0, 293.66, 0, 329.63, 0, 261.63, 0, 220, 0, 440, 0, 523.25, 0, 493.88, 0, 440, 0, 392, 0, 329.63, 0, 293.66, 0, 220, 0];
+    const chatBass    = [110, 0, 0, 0, 98, 0, 0, 0, 87.31, 0, 0, 0, 82.41, 0, 98, 0, 110, 0, 0, 0, 130.81, 0, 0, 0, 98, 0, 0, 0, 82.41, 0, 110, 0];
+
+    function initAudioCtx() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); masterGain = audioCtx.createGain(); masterGain.gain.value = volume; masterGain.connect(audioCtx.destination); } }
+    function playDandaThumpSFX() { if (!settings.sfx) return; initAudioCtx(); if (audioCtx.state === "suspended") audioCtx.resume(); const t = audioCtx.currentTime, o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = "sine"; o.frequency.setValueAtTime(155, t); o.frequency.exponentialRampToValueAtTime(38, t + 0.22); g.gain.setValueAtTime(0.95, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.25); o.connect(g); g.connect(masterGain); o.start(t); o.stop(t + 0.26); }
+    function playPopSFX() { if (!settings.sfx) return; initAudioCtx(); if (audioCtx.state === "suspended") audioCtx.resume(); const t = audioCtx.currentTime, o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = "triangle"; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(280, t + 0.08); g.gain.setValueAtTime(0.25, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.09); o.connect(g); g.connect(masterGain); o.start(t); o.stop(t + 0.1); }
+    function playKick(t) { const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = "sine"; o.frequency.setValueAtTime(135, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.14); g.gain.setValueAtTime(0.85, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.18); o.connect(g); g.connect(masterGain); o.start(t); o.stop(t + 0.19); }
+    function playDholSlap(t) { const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = "triangle"; o.frequency.setValueAtTime(210, t); o.frequency.exponentialRampToValueAtTime(95, t + 0.08); g.gain.setValueAtTime(0.42, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.09); o.connect(g); g.connect(masterGain); o.start(t); o.stop(t + 0.1); }
+    function playPluck(t, freq, dur, type, amp) { if (!freq) return; const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = type; o.frequency.setValueAtTime(freq, t); g.gain.setValueAtTime(amp, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur); o.connect(g); g.connect(masterGain); o.start(t); o.stop(t + dur + 0.02); }
+    function stopBuiltInBeat() { if (beatTimer) { clearInterval(beatTimer); beatTimer = null; } }
+    function startBuiltInBeat(mode) {
+      initAudioCtx(); stopBuiltInBeat(); step = 0;
+      const ms = mode === "intro" ? 135 : 165, mel = mode === "intro" ? introMelody : chatMelody, bas = mode === "intro" ? introBass : chatBass;
+      beatTimer = setInterval(() => {
+        if (!audioCtx || audioCtx.state !== "running") return;
+        const t = audioCtx.currentTime, s32 = step % 32, s16 = step % 16;
+        if (mode === "intro") { if (s16 === 0 || s16 === 3 || s16 === 8 || s16 === 10) playKick(t); if (s16 === 4 || s16 === 12 || s16 === 14) playDholSlap(t); playPluck(t, bas[s32], 0.2, "sine", 0.52); playPluck(t, mel[s32], 0.14, "triangle", 0.24); }
+        else { if (s16 === 0 || s16 === 6 || s16 === 10) playKick(t); if (s16 === 4 || s16 === 12) playDholSlap(t); playPluck(t, bas[s32], 0.28, "sine", 0.48); playPluck(t, mel[s32], 0.22, "sine", 0.18); }
+        step++;
+      }, ms);
+    }
+    function stopAllAudio() { introMusic.pause(); introMusic.currentTime = 0; chatMusic.pause(); stopBuiltInBeat(); introPlaying = false; chatPlaying = false; }
+    function updateIntroSoundUI(p) { introPlaying = p; introSoundBtn.textContent = p ? "🔊 Intro Song: ON" : "🔇 Intro Song: OFF"; if (p) introSoundBtn.classList.remove("pulse"); }
+    function updateChatSoundUI(p) { chatPlaying = p; playBtn.textContent = p ? "⏸ Pause" : "▶ Play"; eqIcon.textContent = p ? "🔊" : "🎵"; tauAvatar.classList.toggle("vibing", p); }
+    async function startIntroSong() { stopAllAudio(); updateChatSoundUI(false); if (introMp3Available) await introMusic.play(); else { initAudioCtx(); if (audioCtx.state === "suspended") await audioCtx.resume(); if (audioCtx.state !== "running") throw new Error(); startBuiltInBeat("intro"); } updateIntroSoundUI(true); }
+    function pauseIntroSong() { introMusic.pause(); stopBuiltInBeat(); updateIntroSoundUI(false); }
+    async function startChatSong() { stopAllAudio(); updateIntroSoundUI(false); if (chatMp3Available) await chatMusic.play(); else { initAudioCtx(); if (audioCtx.state === "suspended") await audioCtx.resume(); if (audioCtx.state !== "running") throw new Error(); startBuiltInBeat("chat"); } updateChatSoundUI(true); }
+    function pauseChatSong() { chatMusic.pause(); stopBuiltInBeat(); updateChatSoundUI(false); }
+
+    introInsertLabel.addEventListener("pointerdown", e => e.stopPropagation());
+    introSongPicker.addEventListener("change", async e => {
+      const f = e.target.files[0]; if (!f) return;
+      const cn = f.name.replace(/\.[^/.]+$/, ""); introSongLabelText.textContent = "Intro: " + cn;
+      introMusic.src = URL.createObjectURL(f); introMp3Available = true; await saveSongToDB("intro_song", cn, f);
+      if (currentScreen === "intro") try { await startIntroSong(); } catch {}
+    });
+    chatSongPicker.addEventListener("change", async e => {
+      const f = e.target.files[0]; if (!f) return;
+      const cn = f.name.replace(/\.[^/.]+$/, ""); trackName.textContent = cn;
+      chatMusic.src = URL.createObjectURL(f); chatMp3Available = true; await saveSongToDB("chat_song", cn, f);
+      if (currentScreen === "chat") try { await startChatSong(); triggerThugDrop(); } catch {}
+    });
+
+    window.addEventListener("load", async () => {
+      const sIn = await loadSongFromDB("intro_song"); if (sIn?.blob) { introMusic.src = URL.createObjectURL(sIn.blob); introMp3Available = true; introSongLabelText.textContent = "Intro: " + sIn.name; }
+      const sCh = await loadSongFromDB("chat_song"); if (sCh?.blob) { chatMusic.src = URL.createObjectURL(sCh.blob); chatMp3Available = true; trackName.textContent = sCh.name; }
+      try { await startIntroSong(); } catch {
+        introSoundBtn.textContent = "🔊 Tap anywhere for Intro Song"; introSoundBtn.classList.add("pulse");
+        const unlock = async () => { if (currentScreen === "intro" && !introPlaying) try { await startIntroSong(); } catch {} document.removeEventListener("pointerdown", unlock); document.removeEventListener("keydown", unlock); };
+        document.addEventListener("pointerdown", unlock, { once: true }); document.addEventListener("keydown", unlock, { once: true });
+      }
+    });
+    introSoundBtn.addEventListener("pointerdown", e => e.stopPropagation());
+    introSoundBtn.addEventListener("click", e => { e.stopPropagation(); introPlaying ? pauseIntroSong() : startIntroSong().catch(() => {}); });
+    enterBtn.addEventListener("click", async () => { currentScreen = "chat"; stopAllAudio(); updateIntroSoundUI(false); playDandaThumpSFX(); introOverlay.classList.add("hide"); try { await startChatSong(); } catch {} triggerThugDrop(); });
+    replayIntroBtn.addEventListener("click", async () => { currentScreen = "intro"; stopAllAudio(); updateChatSoundUI(false); introOverlay.classList.remove("hide", "play"); void introOverlay.offsetWidth; introOverlay.classList.add("play"); try { await startIntroSong(); } catch {} });
+    playBtn.addEventListener("click", () => chatPlaying ? pauseChatSong() : startChatSong().catch(() => {}));
+    volSlider.addEventListener("input", () => { volume = parseFloat(volSlider.value); introMusic.volume = volume; chatMusic.volume = volume; if (masterGain) masterGain.gain.value = volume; });
+
+    // ================= VOICE REPLIES (TTS) =================
+    function speakText(text, force = false) {
+      if (!window.speechSynthesis || (!force && !settings.voiceReply)) return;
+      speechSynthesis.cancel();
+      const clean = text.replace(/[\u{1F300}-\u{1FAFF}]/gu, "");
+      const u = new SpeechSynthesisUtterance(clean);
+      const vs = speechSynthesis.getVoices();
+      const ind = vs.find(v => v.lang.includes("hi-IN") || v.lang.includes("en-IN"));
+      if (ind) u.voice = ind;
+      u.lang = settings.language === "Hindi" ? "hi-IN" : "en-IN";
+      u.rate = 0.98; u.pitch = 0.92;
+      speechSynthesis.speak(u);
+    }
+
+    // ================= MEMORY MODE =================
+    let memEnabled = JSON.parse(localStorage.getItem("taugpt_mem_enabled") ?? "true");
+    let memories = JSON.parse(localStorage.getItem("taugpt_memory_v1") || "[]");
+    const memCountEl = document.getElementById("memCount");
+    const memEnabledToggle = document.getElementById("memEnabledToggle");
+    const memoryListEl = document.getElementById("memoryList");
+
+    function saveMemories() {
+      localStorage.setItem("taugpt_memory_v1", JSON.stringify(memories));
+      localStorage.setItem("taugpt_mem_enabled", JSON.stringify(memEnabled));
+      memCountEl.textContent = memories.length;
+    }
+    function renderMemoryModal() {
+      memEnabledToggle.checked = memEnabled;
+      memoryListEl.innerHTML = "";
+      if (memories.length === 0) {
+        memoryListEl.innerHTML = `<div style="color:#9ca3af;">Abhi kuch yaad nahi rakha hai. Chat mein apna naam ya pasand batao, ya upar add karo!</div>`;
+        return;
+      }
+      memories.forEach((m, idx) => {
+        const div = document.createElement("div");
+        div.className = "card-item";
+        div.style.cssText = "flex-direction:row;align-items:center;justify-content:space-between;";
+        div.innerHTML = `<span>🧠 ${m.replace(/</g, "&lt;")}</span>`;
+        const del = document.createElement("button");
+        del.className = "del-btn"; del.textContent = "🗑️";
+        del.onclick = () => { memories.splice(idx, 1); saveMemories(); renderMemoryModal(); };
+        div.appendChild(del);
+        memoryListEl.appendChild(div);
+      });
+    }
+    saveMemories();
+    memEnabledToggle.addEventListener("change", () => { memEnabled = memEnabledToggle.checked; saveMemories(); showToast(memEnabled ? "Memory Mode ON" : "Memory Mode OFF"); });
+    document.getElementById("memAddBtn").addEventListener("click", () => {
+      const val = document.getElementById("memAddInput").value.trim();
+      if (!val) return;
+      memories.unshift(val);
+      document.getElementById("memAddInput").value = "";
+      saveMemories(); renderMemoryModal(); showToast("Memory Saved! 🧠");
+    });
+    document.getElementById("btnMemory").addEventListener("click", () => { renderMemoryModal(); openModal("memoryModal"); toggleDrawer(false); });
+
+    function detectMemoryCandidate(text) {
+      if (!memEnabled) return null;
+      const mName = text.match(/(?:my name is|mera naam|i am|main hu)\s+([A-Za-z]{2,20})/i);
+      if (mName && !["fine", "good", "happy", "sad", "tired", "here", "back", "bored"].includes(mName[1].toLowerCase())) {
+        const fact = `User's name is ${mName[1]}`;
+        if (!memories.includes(fact)) return fact;
+      }
+      const mCity = text.match(/(?:i live in|i am from|rehta hu|rehti hu|se hu)\s+([A-Za-z\s]{2,22})/i);
+      if (mCity) {
+        const fact = `User is from ${mCity[1].trim()}`;
+        if (!memories.includes(fact)) return fact;
+      }
+      const mFav = text.match(/(?:i love|i like|my fav(?:orite|ourite)? is|pasand hai)\s+([A-Za-z0-9\s]{2,26})/i);
+      if (mFav) {
+        const fact = `User likes ${mFav[1].trim()}`;
+        if (!memories.includes(fact)) return fact;
+      }
+      return null;
+    }
+
+    function getUserNameFromMemory() {
+      if (!memEnabled) return null;
+      const hit = memories.find(m => m.startsWith("User's name is "));
+      return hit ? hit.replace("User's name is ", "") : null;
+    }
+
+    // ================= PERSONALITY MODES & MOOD DETECTION =================
+    const PERSONALITY_MODES = [
+      { id: "attitude", label: "😎 Attitude", rxn: ["swag", "😎"] },
+      { id: "roast",    label: "🔥 Roast",    rxn: ["angry", "🔥"] },
+      { id: "friendly", label: "🤝 Friendly", rxn: ["swag", "🤝"] },
+      { id: "gyaan",    label: "🧠 Gyaan",    rxn: ["think", "🤔"] },
+      { id: "flirt",    label: "😉 Flirt",    rxn: ["flirt", "😉"] },
+      { id: "joke",     label: "😂 Joke",     rxn: ["laugh", "😂"] }
+    ];
+    let activeMode = localStorage.getItem("taugpt_mode_v1") || "attitude";
+    const modeGridEl = document.getElementById("modeGrid"), activeModePill = document.getElementById("activeModePill"), moodPill = document.getElementById("moodPill");
+
+    function renderModes() {
+      modeGridEl.innerHTML = "";
+      PERSONALITY_MODES.forEach(m => {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "mode-pill" + (activeMode === m.id ? " active" : "");
+        b.textContent = m.label;
+        b.onclick = () => {
+          activeMode = m.id; localStorage.setItem("taugpt_mode_v1", activeMode);
+          renderModes(); activeModePill.textContent = m.label;
+          setTauExpression(m.rxn[0], m.rxn[1], `Mode switched to ${m.label}!`, 2500);
+          showToast("Mode: " + m.label);
+        };
+        modeGridEl.appendChild(b);
+      });
+      activeModePill.textContent = (PERSONALITY_MODES.find(x => x.id === activeMode) || PERSONALITY_MODES[0]).label;
+    }
+    renderModes();
+
+    const MOODS = [
+      { key: "chill", tag: "😊 Chill" },
+      { key: "happy", tag: "🥳 Khush" },
+      { key: "sad", tag: "😔 Udaas" },
+      { key: "stressed", tag: "😤 Tensed" },
+      { key: "romantic", tag: "😍 Romantic" },
+      { key: "curious", tag: "🧐 Curious" },
+      { key: "kand", tag: "😈 Mischievous" }
+    ];
+    let currentMood = MOODS[0];
+    function detectMood(text) {
+      const t = text.toLowerCase();
+      if (/sad|udaas|dukhi|cry|rona|lonely|bura lag|akela|haar/.test(t)) return MOODS[2];
+      if (/angry|gussa|dimag kharab|bakwas|hate|stress|tension/.test(t)) return MOODS[3];
+      if (/love|pyaar|crush|cute|date|flirt|dil|ishq|sundar/.test(t)) return MOODS[4];
+      if (/happy|khush|moj|party|maza|awesome|jeet|badhiya/.test(t)) return MOODS[1];
+      if (/kand|galti|caught|police|crush ko|leak|crash|fail/.test(t)) return MOODS[6];
+      if (/why|how|what|kya|kaise|explain|sikha|gyaan|study|code/.test(t)) return MOODS[5];
+      return MOODS[0];
+    }
+    moodPill.addEventListener("click", () => {
+      const next = (MOODS.findIndex(m => m.key === currentMood.key) + 1) % MOODS.length;
+      currentMood = MOODS[next];
+      moodPill.textContent = "Mood: " + currentMood.tag;
+      showToast("Mood set: " + currentMood.tag);
+    });
+
+    // ================= 7. DAILY KAND =================
+    const DAILY_KANDS = [
+      { title: "Doodh Ubalna Bhool Gya!", score: "8/10 🚨", text: "Subah mummy ne bola 'Beta doodh dekhna', bhai ne 2 min Instagram khola... aur pateela coal factory ban gya! Poora ghar dhuan-dhuan!" },
+      { title: "Wrong Group Screenshot!", score: "9/10 💀", text: "Dost ki burai wala screenshot galti se usi dost ke saath wale family group mein chala gya—ab ladka Himalay jaane ki ticket dekh raha se!" },
+      { title: "Bike Ka Petrol Khatam!", score: "6/10 ⛽", text: "Hero ban ke bina tank check kiye ride pe nikla tha, ab 3 km paidal bike dhakka maar ke gym ka cardio poora ho rya se!" },
+      { title: "Online Class Mic ON!", score: "7/10 🎙️", text: "Class mein mic mute samajh ke mummy ko bola 'Mummy aalu ke paranthe aur makhan le aao', sir ne bola 'Beta mere liye bhi ek bhej do!'" },
+      { title: "Crush Ko 'Bhai' Bol Diya!", score: "10/10 🔥", text: "Nervousness mein crush ko 'Thank you bhai' bol aaya—ib dost roz chhed ke jeena haram kar rahe hain!" }
+    ];
+    // Pick today's kand based on date
+    const todaySeed = new Date().getDate() + new Date().getMonth() * 31;
+    let dailyKandIdx = todaySeed % DAILY_KANDS.length;
+    const dailyKandText = document.getElementById("dailyKandText"), dailyKandCard = document.getElementById("dailyKandCard");
+
+    function renderDailyKand() {
+      const k = DAILY_KANDS[dailyKandIdx];
+      dailyKandText.innerHTML = `📰 <strong>Daily Kand (${k.score}):</strong> ${k.title} — ${k.text.slice(0, 72)}...`;
+      dailyKandCard.textContent = `📰 ${k.title}\n🚨 Kand Rating: ${k.score}\n\n${k.text}\n\n💡 Tau Advice: Savdhan raho, satark raho, aur mummy ke saamne phone kam chalao!`;
+    }
+    renderDailyKand();
+    document.getElementById("nextDailyKandBtn").addEventListener("click", () => { dailyKandIdx = (dailyKandIdx + 1) % DAILY_KANDS.length; renderDailyKand(); });
+    document.getElementById("modalNextKandBtn").addEventListener("click", () => { dailyKandIdx = (dailyKandIdx + 1) % DAILY_KANDS.length; renderDailyKand(); });
+    document.getElementById("btnDailyKand").addEventListener("click", () => { renderDailyKand(); openModal("dailyKandModal"); toggleDrawer(false); });
+    document.getElementById("sendDailyKandChatBtn").addEventListener("click", () => {
+      const k = DAILY_KANDS[dailyKandIdx];
+      closeModal("dailyKandModal");
+      sendUserMessage(`Aaj ke Daily Kand pe comment kar Tau: "${k.title} - ${k.text}"`);
+    });
+
+    // ================= JOKES & ROASTS =================
+    const JOKES_BANK = [
+      "Ek Haryanvi ne Google te puchha: 'Mhara gaon kit se?' Google bolya: 'Bhai seedha chala ja, jitt doodh-dahi ki nadi behve aur hukka bajta dikhe, samajh le aa gya!' 😂",
+      "Teacher: 'Beta tension ki spelling bata.' Haryanvi chhora: 'Madam, tension haryanvi ke syllabus mein koni—hum toh bas doodh pi ke so jaate hain!' 🥛😂",
+      "Waiter: 'Sir, cold coffee ya hot?' Haryanvi: 'Bhai lassi le aa makhan maar ke, yo angrezi paani na chalta!' 😎",
+      "Dost: 'Tera WiFi password ke se?' Tau: 'RamRamJi1008' — signal bhi khada ho ke salaam maarega! 📶😂"
+    ];
+    const ROASTS_BANK = [
+      "Teri shakal dekh ke toh lagge se jaise subah bina chai piye alarm ne utha diya ho! 😂 Par dil ka achha se tu laadle.",
+      "Tu itna aalsi se bhai, agar susti ka Olympic hota toh tu gold medal lene bhi kal jaata! 🔥",
+      "Tera dimaag bilkul saste phone ki battery jaisa se—100% dikhave se par aadhe ghante mein hang ho jaave! 😎",
+      "Bhai tu itna confused rehta se ki Google Maps bhi tujhe dekh ke bol de—'Apna rasta khud dekh le!' 🧭😂"
+    ];
+
+    // ================= 1. TAU KI PANCHAYAT =================
+    function evaluatePanchayatOffline(story) {
+      const s = story.toLowerCase();
+      let verdict = "Dono pakshon ko 2-2 cup adrak wali chai aur 1 plate samose khilaye jaayein, aur maamla wahin khatam kiya jaave!";
+      let advice = "Jhagda lamba kheenchne te dosti/rishte kharab hove hain. Seedha baat karke clear kar le laadle!";
+      if (/money|paise|udhaar|loan|rupee/.test(s)) {
+        verdict = "Udhaar lene wale ka phone tab tak zabt kar liya jaave jab tak wo GPay pe 'Paid' ka screenshot na bheje!";
+        advice = "Dosti mein paise hamesha likh ke ya clear timeline ke saath do, aur maangne mein sharmao mat.";
+      } else if (/love|crush|gf|bf|pyaar|breakup/.test(s)) {
+        verdict = "Dil tootne wale ko turant 1 glass thandi lassi pilayi jaave aur 3 din sad songs sunna ban kiya jaave!";
+        advice = "Jo kadar na kare uske pichhe bhaagna band kar—apne career aur self-respect pe dhyan de sher!";
+      } else if (/boss|office|job|work|kaam|manager/.test(s)) {
+        verdict = "Panchayat hukum deti se ki Friday shaam 5 baje ke baad laptop band karke sidha khet ya chai ki tapri pe jaaya jaave!";
+        advice = "Kaam mehnat se karo par boundaries bhi rakho—health aur peace sabte upar se.";
+      } else if (/exam|study|college|padhai|fail/.test(s)) {
+        verdict = "Reel aur gaming pe 7 din ka curfew lagaya jaave, aur har 1 ghante padhai pe 1 laddoo inaam diya jaave!";
+        advice = "Chhote daily targets banao—ek saath syllabus dekh ke darne ki jagah roz 2 topic pakke karo.";
+      }
+      return `🏛️ TAU KI PANCHAYAT\n\n📜 Case: "${story}"\n\n👳 Sarpanch Observation:\nArre bhai, yo toh kati gambhir par mazedaar maamla le aaya tu chopal pe!\n\n⚖️ Panchayat Ka Faisla (Verdict):\n${verdict}\n\n💡 Asli Salah:\n${advice}`;
+    }
+
+    document.getElementById("btnPanchayat").addEventListener("click", () => { openModal("panchayatModal"); toggleDrawer(false); });
+    document.getElementById("runPanchayatBtn").addEventListener("click", async () => {
+      const inp = document.getElementById("panchayatInput").value.trim();
+      const out = document.getElementById("panchayatOut");
+      if (!inp) { showToast("Pehle apna case likh bhai!"); return; }
+      out.style.display = "block";
+      const key = document.getElementById("apiKey").value.trim();
+      if (!key) {
+        out.textContent = evaluatePanchayatOffline(inp);
+        setTauExpression("think", "⚖️", "⚖️ Sarpanch Tau ne faisla suna diya!", 3500);
+        return;
+      }
+      out.textContent = "Panchayat baith rahi se... hukka lagane do...";
+      try {
+        const res = await callOpenAI([
+          { role: "system", content: "You are Sarpanch of 'Tau Ki Panchayat' in Haryana. Given a situation, reply in funny Hinglish Haryanvi with 3 clear sections: 1) Sarpanch Observation, 2) Funny Panchayat Verdict (humorous desi punishment/ruling), 3) Sensible Practical Advice." },
+          { role: "user", content: inp }
+        ]);
+        out.textContent = res;
+        setTauExpression("think", "⚖️", "⚖️ Panchayat ka faisla aa gya!", 3500);
+      } catch { out.textContent = evaluatePanchayatOffline(inp); }
+    });
+
+    // ================= 2. KAND DETECTOR (1–10) =================
+    function evaluateKandOffline(story) {
+      const s = story.toLowerCase();
+      let score = 4;
+      const high = ["police", "jail", "accident", "crash", "boss", "fired", "leaked", "screenshot", "gf", "bf", "papa", "mummy", "principal", "caught", "pakda", "fail"];
+      const med = ["late", "forgot", "bhool", "dost", "bike", "car", "phone", "exam", "jhooth", "lie"];
+      high.forEach(w => { if (s.includes(w)) score += 2; });
+      med.forEach(w => { if (s.includes(w)) score += 1; });
+      score = Math.max(1, Math.min(10, score));
+      let tier = "Chhota Pataka 🧨", expl = "Koi na laadle, yo toh halka-fulka kand se—ek sorry ya chai se nipat jaavega!";
+      if (score >= 9) { tier = "LEGENDARY MAHAKAND 💀🔥"; expl = "Arre bawli booch! Tune toh itihaas rach diya! Ib chुप-chaap gaon chhod ke nani ke ghar nikal ja 2 din ke liye!"; }
+      else if (score >= 7) { tier = "Bada Kand 🚨"; expl = "Maamla garam se bhai! Gharwalon ya boss ke saamne bholi shakal bana ke rakhna hi ekमात्र upaay se!"; }
+      else if (score >= 5) { tier = "Chopal Pe Charcha 🗣️"; expl = "Theek-thaak raita faila diya tune—doston ke paas agle 6 mahine ke liye meme material ready se!"; }
+      return { score, tier, expl };
+    }
+
+    document.getElementById("btnKand").addEventListener("click", () => { openModal("kandModal"); toggleDrawer(false); });
+    document.getElementById("runKandBtn").addEventListener("click", async () => {
+      const inp = document.getElementById("kandInput").value.trim();
+      if (!inp) { showToast("Pehle kand likh toh sahi!"); return; }
+      const wrap = document.getElementById("kandResultWrap"), fill = document.getElementById("kandMeterFill"), scTxt = document.getElementById("kandScoreText"), trTxt = document.getElementById("kandTierText"), out = document.getElementById("kandOut");
+      wrap.style.display = "flex";
+      const resOff = evaluateKandOffline(inp);
+      const key = document.getElementById("apiKey").value.trim();
+
+      let finalScore = resOff.score, finalTier = resOff.tier, finalExpl = resOff.expl;
+      if (key) {
+        out.textContent = "Kand Meter scan kar raha se...";
+        try {
+          const ai = await callOpenAI([
+            { role: "system", content: "Rate the user's described incident's 'Kand Level' from 1 to 10 in funny Haryanvi Hinglish. First line MUST be 'SCORE: X/10' where X is 1-10, followed by a hilarious explanation and survival tip." },
+            { role: "user", content: inp }
+          ]);
+          const m = ai.match(/(\d{1,2})\s*\/\s*10/);
+          if (m) finalScore = Math.max(1, Math.min(10, parseInt(m[1], 10)));
+          finalExpl = ai;
+        } catch {}
+      }
+      scTxt.textContent = `Kand Score: ${finalScore} / 10`;
+      trTxt.textContent = finalTier;
+      fill.style.width = (finalScore * 10) + "%";
+      out.textContent = finalExpl;
+      setTauExpression(finalScore >= 7 ? "shock" : "laugh", finalScore >= 7 ? "😱" : "😂", finalScore >= 7 ? "😱 Arre baap re! Bada kand kar diya!" : "😂 Chhota mota kand se bhai!", 4500);
+    });
+
+    // ================= 3. SAVAGE REPLY GENERATOR =================
+    function generateSavageRepliesOffline(msg, tone) {
+      const templates = {
+        savage: [
+          `1) Bhai tera message padh ke mere phone ki battery bhi sharma ke 1% ho gyi—abhi busy su! 🔥`,
+          `2) Itna confidence kahan te laate ho bhai? Thoda udhaar apne kaam pe bhi laga liya karo! 😎`,
+          `3) Sun laadle, free ka gyaan aur tera message—dono mere kaam ke koni! 🫡`
+        ],
+        funny: [
+          `1) Arre wah, aaj toh suraj pashchim te nikla lagge se jo tune yaad kiya! 😂`,
+          `2) Ruko bhai, pehle chashma dho ke padh lu—itni badi baat likh di tune! 🤣`,
+          `3) Haan bhai, bilkul! Bas pehle bhains ko chaara daal du, fer reply karta hu! 🐃😂`
+        ],
+        witty: [
+          `1) Baat toh teri sahi se, par Tau ke schedule mein abhi sirf moj likhi se! 😎`,
+          `2) Dil pe mat le bhai, main ignore nahi kar raha—bas mental peace save kar raha hu! ✨`,
+          `3) Interesting baat kahi tune... ispe kabhi chopal mein charcha karenge! ☕`
+        ],
+        polite: [
+          `1) Ram Ram bhai! Abhi thoda kaam mein fasa hu, free hote hi aaram te baat karta hu. 🙏`,
+          `2) Bahut badhiya baat kahi aapne, main ispe zaroor dhyan dunga. Dhanyawad! 🤝`,
+          `3) Maaf karna bhai, abhi possible nahi ho paayega—agli baar pakka dekhenge! 😊`
+        ]
+      };
+      return templates[tone] || templates.savage;
+    }
+
+    document.getElementById("btnSavage").addEventListener("click", () => { openModal("savageModal"); toggleDrawer(false); });
+    document.getElementById("runSavageBtn").addEventListener("click", async () => {
+      const inp = document.getElementById("savageInput").value.trim(), tone = document.getElementById("savageTone").value, out = document.getElementById("savageOut");
+      if (!inp) { showToast("Message paste kar pehle!"); return; }
+      out.innerHTML = "";
+      let replies = generateSavageRepliesOffline(inp, tone);
+      const key = document.getElementById("apiKey").value.trim();
+      if (key) {
+        out.innerHTML = `<div class="mod-out">Tau teekhe replies likh raha se...</div>`;
+        try {
+          const ai = await callOpenAI([
+            { role: "system", content: `Generate 3 distinct, short, hilarious Haryanvi/Hinglish replies to the user's pasted message in "${tone}" tone (not genuinely hurtful). Number them 1), 2), 3).` },
+            { role: "user", content: inp }
+          ]);
+          replies = ai.split(/\n(?=\d\))/).map(s => s.trim()).filter(Boolean);
+          if (replies.length === 0) replies = [ai];
+        } catch {}
+      }
+      out.innerHTML = "";
+      replies.forEach(r => {
+        const card = document.createElement("div"); card.className = "card-item";
+        card.innerHTML = `<div>${r.replace(/</g, "&lt;")}</div>`;
+        const b = document.createElement("button"); b.className = "btn-sm"; b.textContent = "📋 Copy Reply"; b.style.width = "fit-content";
+        b.onclick = async () => { await navigator.clipboard?.writeText(r.replace(/^\d\)\s*/, "")); showToast("Reply copied!"); };
+        card.appendChild(b); out.appendChild(card);
+      });
+      setTauExpression(tone === "savage" ? "angry" : "swag", tone === "savage" ? "🔥" : "😎", "🔥 Kadak replies taiyaar hain!", 3000);
+    });
+
+    // ================= 4. ROAST BATTLE ARENA =================
+    let battle = { round: 1, max: 3, user: 0, tau: 0, over: false };
+    const uScoreEl = document.getElementById("userBattleScore"), tScoreEl = document.getElementById("tauBattleScore"), bRoundEl = document.getElementById("battleRoundText"), bLogEl = document.getElementById("battleLog"), bInputEl = document.getElementById("battleInput");
+    const TAU_COMEBACKS = [
+      "Bas itna hi dum tha? Teri lines toh bina namak ki lassi jaisi feeki hain laadle! 🔥",
+      "Arre wah! Achhi koshish ki par Tau ke red pagdi swag ke aage tu abhi nursery mein se! 😎",
+      "Teri roast sun ke meri muchh bhi has padi! Agli baar thoda doodh-dahi kha ke aana! 🥛🔥"
+    ];
+    function resetBattle() {
+      battle = { round: 1, max: 3, user: 0, tau: 0, over: false };
+      uScoreEl.textContent = "0"; tScoreEl.textContent = "0"; bRoundEl.textContent = "Round 1 / 3";
+      bLogEl.innerHTML = `<div class="mod-out">🥊 Maidan mein aa ja laadle! Round 1 shuru—pehle tu roast maar!</div>`;
+    }
+    document.getElementById("btnBattle").addEventListener("click", () => { openModal("battleModal"); toggleDrawer(false); });
+    document.getElementById("resetBattleBtn").addEventListener("click", resetBattle);
+    document.getElementById("sendBattleBtn").addEventListener("click", async () => {
+      if (battle.over) { showToast("Battle khatam! Restart dabao."); return; }
+      const uText = bInputEl.value.trim(); if (!uText) return;
+      bInputEl.value = "";
+      bLogEl.innerHTML += `<div class="card-item" style="border-color:#facc15;"><strong>You (R${battle.round}):</strong> ${uText.replace(/</g, "&lt;")}</div>`;
+
+      const uPts = Math.min(10, Math.max(5, Math.floor(uText.length / 6) + 5));
+      const tPts = Math.floor(Math.random() * 4) + 6;
+      let comeback = TAU_COMEBACKS[(battle.round - 1) % TAU_COMEBACKS.length];
+      const key = document.getElementById("apiKey").value.trim();
+      if (key) {
+        try {
+          comeback = await callOpenAI([
+            { role: "system", content: "You are Tau in a friendly Haryanvi Roast Battle! Give a short, hilarious, punchy 2-line Haryanvi comeback to the user's roast (never genuinely offensive)." },
+            { role: "user", content: uText }
+          ]);
+        } catch {}
+      }
+      battle.user += uPts; battle.tau += tPts;
+      uScoreEl.textContent = battle.user; tScoreEl.textContent = battle.tau;
+      bLogEl.innerHTML += `<div class="mod-out"><strong>Tau (${tPts} pts vs Your ${uPts} pts):</strong>\n${comeback.replace(/</g, "&lt;")}</div>`;
+
+      if (battle.round >= battle.max) {
+        battle.over = true;
+        const win = battle.user > battle.tau ? "🏆 JEET GYA TU LAADLE! Kati Gadar!" : battle.user < battle.tau ? "🏆 TAU JEET GYA! Doodh-dahi ka dum!" : "🤝 BARABARI KA MUKABLA (TIE)!";
+        bRoundEl.textContent = "Finished!";
+        bLogEl.innerHTML += `<div class="mod-out" style="border-color:#facc15;color:#facc15;font-weight:800;">${win}</div>`;
+      } else {
+        battle.round++;
+        bRoundEl.textContent = `Round ${battle.round} / 3`;
+      }
+      bLogEl.scrollTop = bLogEl.scrollHeight;
+      setTauExpression("angry", "🥊", "🥊 Roast battle garam chal rya se!", 3000);
+    });
+
+    // ================= 6. HARYANVI TRANSLATOR (WITH SLANG INTENSITY) =================
+    function translateHaryanviOffline(input, intensity) {
+      let s = input.trim();
+      const base = [
+        [/how are you\??/gi, "ke haal se"],
+        [/what are you doing\??/gi, "ke kar raha se"],
+        [/where are you going\??/gi, "kitt jaave se"],
+        [/i am fine/gi, "main kati thik su"],
+        [/thank you|thanks/gi, "ghana shukriya"],
+        [/very tired/gi, "ghana thak gya"],
+        [/very good|awesome/gi, "kati gadar"],
+        [/don't know|do not know/gi, "manne bera koni"],
+        [/brother|bro/gi, "bhai"],
+        [/friend/gi, "yaar"],
+        [/kaise ho\??/gi, "ke haal se"],
+        [/kya kar rahe ho\??/gi, "ke kare se"],
+        [/bahut/gi, "ghana"],
+        [/nahi\b/gi, "koni"],
+        [/hai\b/gi, "se"],
+        [/kya\b/gi, "ke"]
+      ];
+      base.forEach(([p, r]) => { s = s.replace(p, r); });
+      if (intensity === "mild") return s + " bhai!";
+      if (intensity === "medium") return s + " laadle!";
+      return `Arre sun bawli booch: ${s}, samjha ke?! 🔥`;
+    }
+
+    document.getElementById("btnTranslator").addEventListener("click", () => { openModal("transModal"); toggleDrawer(false); });
+    document.getElementById("doTranslateBtn").addEventListener("click", async () => {
+      const inp = document.getElementById("transInput").value.trim(), intensity = document.getElementById("transIntensity").value, out = document.getElementById("transOutput");
+      if (!inp) { showToast("Sentence likh pehle!"); return; }
+      const key = document.getElementById("apiKey").value.trim();
+      if (!key) { out.textContent = translateHaryanviOffline(inp, intensity); return; }
+      out.textContent = "Translate ho raha se...";
+      try {
+        out.textContent = await callOpenAI([
+          { role: "system", content: `Translate English/Hindi into natural Romanized Haryanvi with "${intensity}" slang intensity (mild = light Haryanvi words, medium = everyday Rohtak dialect, hardcore = full desi Tau idioms like bawli booch, kati jeher, bera koni).` },
+          { role: "user", content: inp }
+        ]);
+      } catch { out.textContent = translateHaryanviOffline(inp, intensity); }
+    });
+    document.getElementById("copyTransBtn").addEventListener("click", async () => { await navigator.clipboard?.writeText(document.getElementById("transOutput").textContent); showToast("Copied!"); });
+    document.getElementById("sendTransChatBtn").addEventListener("click", () => { const i = document.getElementById("transInput").value.trim(); closeModal("transModal"); if (i) sendUserMessage("/translate " + i); });
+
+    // ================= CHAT HISTORY & FAVOURITES =================
+    const sidebar = document.getElementById("sidebar"), sidebarBackdrop = document.getElementById("sidebarBackdrop"), menuBtn = document.getElementById("menuBtn"), historyListEl = document.getElementById("historyList"), chatEl = document.getElementById("chat"), favCountEl = document.getElementById("favCount");
+    let chats = JSON.parse(localStorage.getItem("taugpt_chats_v2") || "null") || [];
+    let favs = JSON.parse(localStorage.getItem("taugpt_favs_v1") || "null") || [];
+    let activeChatId = null;
+
+    function toggleDrawer(o) { sidebar.classList.toggle("open", o); sidebarBackdrop.classList.toggle("open", o); }
+    menuBtn.addEventListener("click", () => toggleDrawer(true));
+    sidebarBackdrop.addEventListener("click", () => toggleDrawer(false));
+    function saveChats() { localStorage.setItem("taugpt_chats_v2", JSON.stringify(chats)); }
+    function saveFavs() { localStorage.setItem("taugpt_favs_v1", JSON.stringify(favs)); favCountEl.textContent = favs.length; }
+    favCountEl.textContent = favs.length;
+
+    function createNewChat() {
+      const c = { id: "chat_" + Date.now() + "_" + Math.random().toString(36).slice(2, 5), title: "Nayi Baatcheet", messages: [{ id: "m_" + Date.now(), role: "assistant", content: "Ram Ram laadle! Tau haazir se—koi sawaal puchh, kand bata, ya '/' daba ke secret commands try kar!" }] };
+      chats.unshift(c); activeChatId = c.id; saveChats(); renderHistory(); renderChat(); toggleDrawer(false);
+    }
+    if (chats.length === 0) createNewChat(); else activeChatId = chats[0].id;
+    function getActiveChat() { return chats.find(c => c.id === activeChatId) || chats[0]; }
+
+    document.getElementById("newChatBtn").addEventListener("click", createNewChat);
+    document.getElementById("clearChatBtn").addEventListener("click", () => {
+      const c = getActiveChat(); c.messages = [{ id: "m_" + Date.now(), role: "assistant", content: "Chat saaf kar di bhai! Ib nayi shuruat kar." }]; c.title = "Nayi Baatcheet";
+      saveChats(); renderHistory(); renderChat(); showToast("Chat cleared! 🧹");
+    });
+
+    function renderHistory() {
+      historyListEl.innerHTML = "";
+      chats.forEach(c => {
+        const div = document.createElement("div"); div.className = "side-item" + (c.id === activeChatId ? " active" : "");
+        div.onclick = () => { activeChatId = c.id; renderHistory(); renderChat(); toggleDrawer(false); };
+        const lbl = document.createElement("span"); lbl.className = "side-item-label"; lbl.textContent = "💬 " + c.title;
+        const del = document.createElement("button"); del.className = "del-btn"; del.textContent = "🗑️";
+        del.onclick = e => { e.stopPropagation(); chats = chats.filter(x => x.id !== c.id); if (chats.length === 0) createNewChat(); else if (activeChatId === c.id) activeChatId = chats[0].id; saveChats(); renderHistory(); renderChat(); };
+        div.append(lbl, del); historyListEl.appendChild(div);
+      });
+    }
+
+    const SUGGESTED_PROMPTS = ["Bhai, roast kar de!", "Koi Haryanvi joke suna.", "Thoda gyaan de.", "Aaj ka mood samajh.", "Mane Haryanvi sikha de.", "Koi funny dialogue maar."];
+    function renderStarters() {
+      const w = document.createElement("div"); w.className = "starters-wrap";
+      w.innerHTML = `<div class="starters-title">💡 Conversation Starters — Try Asking Tau:</div>`;
+      const g = document.createElement("div"); g.className = "starters-grid";
+      SUGGESTED_PROMPTS.forEach(t => { const c = document.createElement("button"); c.type = "button"; c.className = "starter-card"; c.textContent = t; c.onclick = () => sendUserMessage(t); g.appendChild(c); });
+      w.appendChild(g); chatEl.appendChild(w);
+    }
+
+    function createMsgElement(msg, index) {
+      const wrap = document.createElement("div"); wrap.className = `msg-wrap ${msg.role === "user" ? "user" : "bot"}`;
+      const bubble = document.createElement("div"); bubble.className = "msg";
+      if (msg.image) { const img = document.createElement("img"); img.src = msg.image; img.className = "msg-img"; bubble.appendChild(img); }
+      if (msg.content) { const t = document.createElement("div"); t.textContent = msg.content; bubble.appendChild(t); }
+      wrap.appendChild(bubble);
+
+      // User-approved Memory suggestion chip
+      if (msg.memCandidate && !msg.memHandled) {
+        const chip = document.createElement("div"); chip.className = "mem-prompt";
+        chip.innerHTML = `<span>🧠 Yaad rakhu: <strong>${msg.memCandidate.replace(/</g, "&lt;")}</strong>?</span>`;
+        const yes = document.createElement("button"); yes.className = "btn-sm play"; yes.textContent = "✔ Save";
+        yes.onclick = () => { memories.unshift(msg.memCandidate); msg.memHandled = true; saveMemories(); saveChats(); renderChat(); showToast("Remembered! 🧠"); };
+        const no = document.createElement("button"); no.className = "btn-sm"; no.textContent = "✕";
+        no.onclick = () => { msg.memHandled = true; saveChats(); renderChat(); };
+        chip.append(yes, no); wrap.appendChild(chip);
+      }
+
+      if (msg.role === "assistant" && msg.content && !msg.pending) {
+        const acts = document.createElement("div"); acts.className = "msg-actions";
+        const tts = document.createElement("button"); tts.className = "act-btn"; tts.textContent = "🔊"; tts.onclick = () => speakText(msg.content, true);
+        const cp = document.createElement("button"); cp.className = "act-btn"; cp.textContent = "📋 Copy"; cp.onclick = async () => { await navigator.clipboard?.writeText(msg.content); showToast("Copied! 📋"); };
+        const isFav = favs.some(f => f.text === msg.content);
+        const fv = document.createElement("button"); fv.className = "act-btn" + (isFav ? " fav-on" : ""); fv.textContent = isFav ? "⭐ Saved" : "☆ Save";
+        fv.onclick = () => {
+          const i = favs.findIndex(f => f.text === msg.content);
+          if (i >= 0) { favs.splice(i, 1); showToast("Removed"); } else { favs.unshift({ id: Date.now(), text: msg.content }); showToast("Saved! ⭐"); }
+          saveFavs(); renderChat();
+        };
+        const sh = document.createElement("button"); sh.className = "act-btn"; sh.textContent = "📤 Share";
+        sh.onclick = async () => { if (navigator.share) { try { await navigator.share({ title: "Tau", text: msg.content }); return; } catch {} } await navigator.clipboard?.writeText(msg.content); showToast("Copied for sharing! 📤"); };
+        acts.append(tts, cp, fv, sh);
+        if (index > 0) { const rg = document.createElement("button"); rg.className = "act-btn"; rg.textContent = "🔄 Regenerate"; rg.onclick = () => regenerateAt(index); acts.appendChild(rg); }
+        wrap.appendChild(acts);
+      }
+      return wrap;
+    }
+
+    function renderChat() {
+      const c = getActiveChat(); chatEl.innerHTML = "";
+      c.messages.forEach((m, i) => chatEl.appendChild(createMsgElement(m, i)));
+      if (c.messages.length <= 1) renderStarters();
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+    renderHistory(); renderChat();
+
+    // ================= SIDEBAR FOOTER & QUICK TOOLS =================
+    document.getElementById("btnSettings").addEventListener("click", () => { openModal("settingsModal"); toggleDrawer(false); });
+    document.getElementById("btnHelp").addEventListener("click", () => { openModal("helpModal"); toggleDrawer(false); });
+    document.getElementById("btnFavs").addEventListener("click", () => {
+      const body = document.getElementById("favsBody"); body.innerHTML = "";
+      if (favs.length === 0) body.innerHTML = `<p style="color:#9ca3af;">Abhi koi reply save nahi kiya bhai!</p>`;
+      else favs.forEach((f, idx) => {
+        const card = document.createElement("div"); card.className = "card-item";
+        card.innerHTML = `<div>${f.text.replace(/</g, "&lt;")}</div>`;
+        const r = document.createElement("div"); r.style.cssText = "display:flex;gap:6px;";
+        const c = document.createElement("button"); c.className = "btn-sm"; c.textContent = "📋 Copy"; c.onclick = async () => { await navigator.clipboard?.writeText(f.text); showToast("Copied!"); };
+        const d = document.createElement("button"); d.className = "btn-sm"; d.textContent = "🗑️ Remove"; d.onclick = () => { favs.splice(idx, 1); saveFavs(); document.getElementById("btnFavs").click(); renderChat(); };
+        r.append(c, d); card.appendChild(r); body.appendChild(card);
+      });
+      openModal("favsModal"); toggleDrawer(false);
+    });
+    document.getElementById("clearAllHistBtn").addEventListener("click", () => { if (!confirm("Saari history delete karein?")) return; chats = []; createNewChat(); closeModal("settingsModal"); showToast("All history cleared!"); });
+    document.getElementById("btnRandJoke").addEventListener("click", () => { toggleDrawer(false); sendUserMessage("/joke"); });
+    document.getElementById("btnRandRoast").addEventListener("click", () => { toggleDrawer(false); sendUserMessage("/roast"); });
+
+    // ================= IMAGE, EMOJI, VOICE INPUT & SLASH COMMANDS =================
+    const imgPicker = document.getElementById("imgPicker"), attachPreview = document.getElementById("attachPreview"), attachImg = document.getElementById("attachImg"), attachName = document.getElementById("attachName"), removeAttachBtn = document.getElementById("removeAttachBtn"), promptEl = document.getElementById("prompt"), emojiBtn = document.getElementById("emojiBtn"), emojiPopover = document.getElementById("emojiPopover"), cmdPopover = document.getElementById("cmdPopover"), micBtn = document.getElementById("micBtn");
+    let pendingImageDataUrl = null, pendingImageName = "";
+
+    imgPicker.addEventListener("change", e => {
+      const f = e.target.files[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = () => { pendingImageDataUrl = r.result; pendingImageName = f.name; attachImg.src = pendingImageDataUrl; attachName.textContent = f.name; attachPreview.style.display = "flex"; };
+      r.readAsDataURL(f); imgPicker.value = "";
+    });
+    removeAttachBtn.addEventListener("click", () => { pendingImageDataUrl = null; pendingImageName = ""; attachPreview.style.display = "none"; });
+
+    const EMOJIS = ["😂", "🔥", "😎", "🙏", "💪", "❤️", "🌾", "🥳", "🤣", "👀", "🫡", "✨", "😉", "🧠", "🥛", "🎵", "⚖️", "🚨"];
+    EMOJIS.forEach(em => { const b = document.createElement("button"); b.type = "button"; b.className = "emoji-item"; b.textContent = em; b.onclick = () => { promptEl.value += em; promptEl.focus(); }; emojiPopover.appendChild(b); });
+    emojiBtn.addEventListener("click", e => { e.stopPropagation(); emojiPopover.classList.toggle("open"); });
+
+    const SECRET_CMDS = [
+      { cmd: "/roast", desc: "Funny Haryanvi roast" },
+      { cmd: "/joke", desc: "Random Haryanvi joke" },
+      { cmd: "/panchayat", desc: "Tau Ki Panchayat verdict" },
+      { cmd: "/gyaan", desc: "Educational desi gyaan" },
+      { cmd: "/translate", desc: "Translate to Haryanvi" },
+      { cmd: "/kand", desc: "Rate kand level (1–10)" },
+      { cmd: "/savage", desc: "Generate savage reply" },
+      { cmd: "/memory", desc: "Show Tau's memory" },
+      { cmd: "/help", desc: "Show all secret commands" }
+    ];
+    promptEl.addEventListener("input", () => {
+      const v = promptEl.value;
+      if (v.startsWith("/") && !v.includes(" ")) {
+        const matches = SECRET_CMDS.filter(c => c.cmd.startsWith(v.toLowerCase()));
+        cmdPopover.innerHTML = "";
+        matches.forEach(m => {
+          const btn = document.createElement("button"); btn.type = "button"; btn.className = "cmd-opt";
+          btn.innerHTML = `<strong>${m.cmd}</strong><span>${m.desc}</span>`;
+          btn.onclick = () => { promptEl.value = m.cmd + " "; cmdPopover.classList.remove("open"); promptEl.focus(); };
+          cmdPopover.appendChild(btn);
+        });
+        cmdPopover.classList.toggle("open", matches.length > 0);
+      } else {
+        cmdPopover.classList.remove("open");
+      }
+    });
+    document.addEventListener("click", e => {
+      if (!emojiPopover.contains(e.target) && e.target !== emojiBtn) emojiPopover.classList.remove("open");
+      if (!cmdPopover.contains(e.target) && e.target !== promptEl) cmdPopover.classList.remove("open");
+    });
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null, isListening = false, basePromptText = "";
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition(); recognition.continuous = false; recognition.interimResults = true;
+      recognition.onstart = () => { isListening = true; basePromptText = promptEl.value ? promptEl.value + " " : ""; micBtn.classList.add("listening"); tauStatus.textContent = "🎙️ Bol bhai... Tau sun raha se!"; };
+      recognition.onresult = e => { let t = ""; for (let i = 0; i < e.results.length; i++) t += e.results[i][0].transcript; promptEl.value = basePromptText + t; };
+      recognition.onerror = e => { tauStatus.textContent = "⚠️ Mic error: " + e.error; };
+      recognition.onend = () => { isListening = false; micBtn.classList.remove("listening"); tauStatus.textContent = chatPlaying ? "🕺 Tau inside song pe full vibe kar raha se!" : "😎 Full swag mein baitha se Tau — puchh ke puchhna!"; };
+    }
+    micBtn.addEventListener("click", () => { if (!recognition) { alert("Chrome ya Edge use karo voice input ke liye!"); return; } if (isListening) recognition.stop(); else { recognition.lang = settings.language === "Hindi" ? "hi-IN" : "en-IN"; recognition.start(); } });
+
+    // ================= OPENAI HELPER + SECRET COMMANDS + CHAT ENGINE =================
+    const form = document.getElementById("form"), apiKeyEl = document.getElementById("apiKey"), modeBadge = document.getElementById("modeBadge");
+    apiKeyEl.addEventListener("input", () => {
+      const live = apiKeyEl.value.trim().startsWith("sk-");
+      modeBadge.textContent = live ? "Live AI Mode" : "Demo Mode";
+      modeBadge.className = live ? "badge live" : "badge";
+    });
+
+    async function callOpenAI(messages) {
+      const key = apiKeyEl.value.trim();
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
+        body: JSON.stringify({ model: "gpt-6-luna", reasoning_effort: "none", temperature: 0.9, messages })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || "API error");
+      return data.choices[0].message.content;
+    }
+
+    function buildSystemPrompt(moodObj) {
+      const modeMap = {
+        roast: "Roast Mode: witty, funny, lighthearted roasts without being genuinely hurtful.",
+        friendly: "Friendly Mode: warm, caring, supportive Haryanvi best friend.",
+        attitude: "Attitude Mode: bold, confident, Thug Life Haryanvi swag.",
+        gyaan: "Gyaan Mode: educational & clear explanations with fun desi analogies.",
+        flirt: "Flirt Mode: playful, cheeky, humorous, respectful desi charm.",
+        joke: "Joke Mode: include a funny Haryanvi joke or punchy one-liner."
+      };
+      const memStr = (memEnabled && memories.length > 0) ? `\nUSER-APPROVED MEMORIES:\n- ${memories.join("\n- ")}` : "";
+      return `
+        You are "Tau" — a funny, witty Haryanvi Jaat AI wearing a red pagdi turban, checkered gamcha, thug life glasses, and a two-part moustache.
+        Mode: ${modeMap[activeMode] || modeMap.attitude}
+        Language Preference: ${settings.language}. (If Haryanvi, use authentic funny Hinglish Haryanvi like 'ke haal se', 'tanne', 'kati gadar', 'bawli booch', 'laadle').
+        Detected User Mood: ${moodObj.tag}. Adapt your empathy and energy accordingly.${memStr}
+      `;
+    }
+
+    async function handleSecretCommand(text, moodObj) {
+      const [rawCmd, ...rest] = text.trim().split(/\s+/);
+      const cmd = rawCmd.toLowerCase();
+      const arg = rest.join(" ");
+      const key = apiKeyEl.value.trim();
+
+      if (cmd === "/help") {
+        setTauExpression("think", "📖", "📖 Secret commands list!", 3000);
+        return `🕵️‍♂️ SECRET COMMANDS:\n• /roast [target] — Funny Haryanvi roast\n• /joke — Random Haryanvi joke\n• /panchayat [case] — Tau Ki Panchayat verdict\n• /gyaan [topic] — Desi gyaan\n• /translate [text] — Haryanvi translation\n• /kand [story] — Kand Detector (1–10)\n• /savage [msg] — Savage reply ideas\n• /memory — What Tau remembers`;
+      }
+      if (cmd === "/memory") {
+        setTauExpression("think", "🧠", "🧠 Tau apni yaaddasht check kar raha se!", 3000);
+        return memories.length ? `🧠 Tau ko ye baatein yaad hain:\n• ${memories.join("\n• ")}` : "🧠 Abhi memory khaali se bhai! Sidebar ke 🧠 Mem button se add kar le.";
+      }
+      if (cmd === "/panchayat") {
+        const story = arg || "Mere dost ne party ka bol ke bill mujhpe daal diya!";
+        setTauExpression("think", "⚖️", "⚖️ Panchayat baith gyi!", 3500);
+        if (key) return await callOpenAI([{ role: "system", content: "Act as Sarpanch of Tau Ki Panchayat in funny Haryanvi Hinglish. Give Observation, Funny Verdict, and Sensible Advice." }, { role: "user", content: story }]);
+        return evaluatePanchayatOffline(story);
+      }
+      if (cmd === "/kand") {
+        const story = arg || "Galti se boss ke samne reel play ho gyi full volume mein!";
+        const off = evaluateKandOffline(story);
+        setTauExpression(off.score >= 7 ? "shock" : "laugh", off.score >= 7 ? "😱" : "🚨", "🚨 Kand scanned!", 3500);
+        if (key) return await callOpenAI([{ role: "system", content: "Rate the Kand Level from 1 to 10 in funny Haryanvi Hinglish with explanation and survival tip." }, { role: "user", content: story }]);
+        return `🚨 KAND DETECTOR\nScore: ${off.score}/10 — ${off.tier}\n\n${off.expl}`;
+      }
+      if (cmd === "/translate") {
+        const txt = arg || "How are you brother?";
+        setTauExpression("swag", "🌐", "🌐 Haryanvi translation!", 3000);
+        if (key) return await callOpenAI([{ role: "system", content: "Translate into natural funny Haryanvi Hinglish." }, { role: "user", content: txt }]);
+        return "🌐 Haryanvi Translation:\n" + translateHaryanviOffline(txt, "hardcore");
+      }
+      if (cmd === "/savage") {
+        const msg = arg || "Bhai kal pakka milte hain";
+        setTauExpression("angry", "🔥", "🔥 Savage replies ready!", 3000);
+        if (key) return await callOpenAI([{ role: "system", content: "Give 3 witty, funny, savage Haryanvi replies to this message." }, { role: "user", content: msg }]);
+        return "💬 Savage Replies:\n" + generateSavageRepliesOffline(msg, "savage").join("\n");
+      }
+      if (cmd === "/roast") {
+        activeMode = "roast"; renderModes();
+        setTauExpression("angry", "🔥", "🔥 Roast mode activated!", 3500);
+        if (key) return await callOpenAI([{ role: "system", content: buildSystemPrompt(moodObj) }, { role: "user", content: arg ? `Roast ${arg}` : "Give a funny friendly roast!" }]);
+        return (arg ? `${arg} ke liye special roast: ` : "") + ROASTS_BANK[Math.floor(Math.random() * ROASTS_BANK.length)];
+      }
+      if (cmd === "/joke") {
+        activeMode = "joke"; renderModes();
+        setTauExpression("laugh", "😂", "😂 Haryanvi joke time!", 3500);
+        if (key) return await callOpenAI([{ role: "system", content: buildSystemPrompt(moodObj) }, { role: "user", content: "Tell a hilarious Haryanvi joke!" }]);
+        return JOKES_BANK[Math.floor(Math.random() * JOKES_BANK.length)];
+      }
+      if (cmd === "/gyaan") {
+        activeMode = "gyaan"; renderModes();
+        setTauExpression("think", "🧠", "🧠 Tau ka gyaan!", 3500);
+        if (key) return await callOpenAI([{ role: "system", content: buildSystemPrompt(moodObj) }, { role: "user", content: arg || "Give useful life or tech gyaan!" }]);
+        return `🧠 Tau Ka Gyaan${arg ? " (" + arg + ")" : ""}:\nZindagi mein 3 cheezein pakki rakho—subah ka doodh-dahi, kaam mein imandari, aur faltu logon te doori! Baaki sab kati set ho jaavega!`;
+      }
+      return null;
+    }
+
+    function generateDemoReply(text, moodObj, hasImage, imgName, variation = 0) {
+      const t = text.toLowerCase();
+      const uname = getUserNameFromMemory();
+      const greet = uname ? `${uname} laadle` : "laadle";
+
+      if (hasImage) return `Oye hoye ${greet}! Ye "${imgName || "photo"}" bheji se tune! Kati gadar lag rahi se—Live AI key daal de toh photo ki poori kahani bata dunga!`;
+      if (t.includes("joke") || activeMode === "joke") return JOKES_BANK[(Math.floor(Math.random() * JOKES_BANK.length) + variation) % JOKES_BANK.length];
+      if (t.includes("roast") || activeMode === "roast") return ROASTS_BANK[(Math.floor(Math.random() * ROASTS_BANK.length) + variation) % ROASTS_BANK.length];
+      if (t.includes("dialogue")) return "Pagdi laal, gamcha gale mein, aur chashma kaala—Tau ka swag sabte nirala! 🔥";
+      if (moodObj.key === "sad") return `Arre ${greet}, udaas kyun ho raha se? Tau khada se tere saath! Chahe koi bhi chakar ho, sab thik ho jayega—ek garm chai pi aur muskura! 🤝💛`;
+      if (moodObj.key === "stressed") return `Thanda paani pi le ${greet}, itni tension mein dimaag ka dahi mat bana! Jo problem se mil ke suljha lenge! 🙏`;
+      if (moodObj.key === "kand") return `Oye ${greet}! Kuch kand kar aaya ke? Sidebar mein 🚨 Kand Detector khol ke score check kar le—Tau bachane ki jugaad batayega!`;
+      if (activeMode === "flirt") return `Oye hoye ${greet}! Itni pyaari baatein karega toh Tau ka dil bhi sarson ke khet jaisa khil jaavega! 😉💛`;
+      if (activeMode === "gyaan" || t.includes("gyaan")) return `Sun ${greet}, gyaan ki baat: "${text}" samajhna bilkul aasaan se—bas consistency rakho! Live AI key daal de toh poora masterclass de dunga! 🧠`;
+      if (activeMode === "friendly") return `Ram Ram ${greet}! Teri "${text}" wali baat sun ke achha laga. Koi bhi help chahiye toh Tau yahin baitha se! 🤝`;
+      return `Sun ${greet}, "${text}" ki baat kar raha se? Tau ke aage sab chhote chakar hain—live AI key daal ke asli power dekh! 😎`;
+    }
+
+    function applyReactionForReply(moodObj) {
+      if (activeMode === "joke") setTauExpression("laugh", "😂", "😂 Has-has ke pet dukh gya!", 4000);
+      else if (activeMode === "roast") setTauExpression("angry", "🔥", "🔥 Roast mode on fire!", 4000);
+      else if (activeMode === "flirt" || moodObj.key === "romantic") setTauExpression("flirt", "😉", "😉 Tau full romantic mood mein!", 4000);
+      else if (activeMode === "gyaan" || moodObj.key === "curious") setTauExpression("think", "🤔", "🤔 Gyaan barsa raha se Tau!", 4000);
+      else if (moodObj.key === "kand") setTauExpression("shock", "😱", "😱 Yo ke kar diya bhai?!", 4000);
+      else if (moodObj.key === "sad") setTauExpression("swag", "💛", "💛 Tau tere saath se bhai!", 4000);
+      else setTauExpression("swag", "😎", "😎 Full swag mein baitha se Tau!", 3000);
+    }
+
+    async function fetchOrDemoReply(chat, moodObj, variation = 0) {
+      const key = apiKeyEl.value.trim();
+      const lastUser = [...chat.messages].reverse().find(m => m.role === "user") || { content: "Hi" };
+      if (!key) {
+        await new Promise(r => setTimeout(r, 300));
+        return generateDemoReply(lastUser.content || "", moodObj, !!lastUser.image, lastUser.imageName, variation);
+      }
+      const apiMessages = [
+        { role: "system", content: buildSystemPrompt(moodObj) },
+        ...chat.messages.filter(m => !m.pending).map(m => m.role === "user" && m.image
+          ? { role: "user", content: [{ type: "text", text: m.content || "Respond to this image in Haryanvi Tau style." }, { type: "image_url", image_url: { url: m.image } }] }
+          : { role: m.role, content: m.content }
+        )
+      ];
+      return await callOpenAI(apiMessages);
+    }
+
+    async function sendUserMessage(overrideText = null) {
+      if (isListening && recognition) recognition.stop();
+      const text = (overrideText !== null ? overrideText : promptEl.value).trim();
+      if (!text && !pendingImageDataUrl) return;
+
+      if (overrideText === null) promptEl.value = "";
+      cmdPopover.classList.remove("open");
+
+      const imgData = pendingImageDataUrl, imgName = pendingImageName;
+      pendingImageDataUrl = null; pendingImageName = ""; attachPreview.style.display = "none";
+
+      currentMood = detectMood(text || "photo");
+      moodPill.textContent = "Mood: " + currentMood.tag;
+
+      const chat = getActiveChat();
+      if (chat.messages.length <= 1) {
+        const src = text || imgName || "Photo Chat";
+        chat.title = src.length > 26 ? src.slice(0, 26) + "..." : src;
+      }
+
+      const memCandidate = text.startsWith("/") ? null : detectMemoryCandidate(text);
+      chat.messages.push({ id: "m_" + Date.now(), role: "user", content: text, image: imgData, imageName: imgName, memCandidate, memHandled: false });
+      const pendingMsg = { id: "m_wait", role: "assistant", content: "Tau soch raha se...", pending: true };
+      chat.messages.push(pendingMsg);
+      saveChats(); renderHistory(); renderChat(); playPopSFX();
+
+      try {
+        let reply = null;
+        if (text.startsWith("/")) reply = await handleSecretCommand(text, currentMood);
+        if (reply === null) {
+          reply = await fetchOrDemoReply(chat, currentMood, 0);
+          applyReactionForReply(currentMood);
+        }
+        pendingMsg.content = reply;
+        delete pendingMsg.pending;
+        saveChats(); renderChat();
+        playPopSFX(); triggerTalking(1900); triggerThugDrop(); speakText(reply);
+      } catch (err) {
+        pendingMsg.content = "⚠️ Arre bhai gadbad ho gyi: " + err.message;
+        delete pendingMsg.pending;
+        saveChats(); renderChat();
+      }
+    }
+
+    async function regenerateAt(botIdx) {
+      const chat = getActiveChat();
+      const prevUser = chat.messages.slice(0, botIdx).reverse().find(m => m.role === "user");
+      if (!prevUser) return;
+      const moodObj = detectMood(prevUser.content || "");
+      chat.messages = chat.messages.slice(0, botIdx);
+      const pendingMsg = { id: "m_regen", role: "assistant", content: "Tau naya jawab soch raha se...", pending: true };
+      chat.messages.push(pendingMsg); renderChat();
+      try {
+        const reply = await fetchOrDemoReply(chat, moodObj, Math.floor(Math.random() * 5) + 1);
+        pendingMsg.content = reply; delete pendingMsg.pending;
+        saveChats(); renderChat(); playPopSFX(); triggerTalking(1800); applyReactionForReply(moodObj); speakText(reply);
+      } catch (err) {
+        pendingMsg.content = "⚠️ Regenerate error: " + err.message; delete pendingMsg.pending; saveChats(); renderChat();
+      }
+    }
+
+    form.addEventListener("submit", e => { e.preventDefault(); sendUserMessage(); });
+  </script>
+</body>
+</html>
+
+
